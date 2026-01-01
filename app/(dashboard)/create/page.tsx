@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/Button";
@@ -217,8 +218,8 @@ function UploadSlot({ label, file, preview, onChange }: UploadSlotProps) {
     <div
       onClick={() => inputRef.current?.click()}
       className={`group relative overflow-hidden rounded-2xl aspect-[3/4] transition-all duration-500 cursor-pointer border-2 ${preview
-          ? 'border-terracotta-500/30'
-          : 'border-dashed border-cream-200 bg-white hover:bg-cream-50 hover:border-terracotta-400/50'
+        ? 'border-terracotta-500/30'
+        : 'border-dashed border-cream-200 bg-white hover:bg-cream-50 hover:border-terracotta-400/50'
         }`}
     >
       <input

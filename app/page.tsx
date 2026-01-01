@@ -19,7 +19,7 @@ export default async function Home() {
         </div>
 
         <nav className="hidden lg:flex gap-10 text-[11px] font-bold tracking-[0.2em] text-gray-500 uppercase">
-          <a href="#how-it-works" className="hover:text-terracotta-500 transition-colors">So funktioniert's</a>
+          <a href="#how-it-works" className="hover:text-terracotta-500 transition-colors">So funktioniert&apos;s</a>
           <a href="#gallery" className="hover:text-terracotta-500 transition-colors">Galerie</a>
           <a href="#quality" className="hover:text-terracotta-500 transition-colors">Qualität</a>
           {isAdmin && (
@@ -184,19 +184,19 @@ export default async function Home() {
               <div className="aspect-[4/5] bg-cream-50 relative overflow-hidden mb-4">
                 <Image src="/hero-gallery.jpg" alt="Inspiration 1" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
               </div>
-              <p className="font-serif text-center italic text-gray-800">"The Connection"</p>
+              <p className="font-serif text-center italic text-gray-800">&quot;The Connection&quot;</p>
             </div>
             <div className="group overflow-hidden rounded-sm shadow-xl bg-white p-4 transition-transform hover:-translate-y-2 lg:mt-12">
               <div className="aspect-[4/5] bg-cream-50 relative overflow-hidden mb-4">
                 <Image src="/hero-gallery.jpg" alt="Inspiration 2" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
               </div>
-              <p className="font-serif text-center italic text-gray-800">"Shared Path"</p>
+              <p className="font-serif text-center italic text-gray-800">&quot;Shared Path&quot;</p>
             </div>
             <div className="group overflow-hidden rounded-sm shadow-xl bg-white p-4 transition-transform hover:-translate-y-2 lg:mt-24">
               <div className="aspect-[4/5] bg-cream-50 relative overflow-hidden mb-4">
                 <Image src="/hero-gallery.jpg" alt="Inspiration 3" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
               </div>
-              <p className="font-serif text-center italic text-gray-800">"One Soul"</p>
+              <p className="font-serif text-center italic text-gray-800">&quot;One Soul&quot;</p>
             </div>
           </div>
         </div>
