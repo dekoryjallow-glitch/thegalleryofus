@@ -16,7 +16,7 @@ export default async function Home() {
       <header className="w-full py-6 px-8 flex justify-between items-center bg-cream-50/80 backdrop-blur-md fixed top-0 z-50 border-b border-cream-200/50 transition-all duration-300">
         <div className="font-serif text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
           <span className="w-8 h-8 bg-terracotta-500 rounded-full flex items-center justify-center text-white text-xs font-serif italic text-sm">G</span>
-          Gallery Test 123
+          The Gallery Of Us
         </div>
         <nav className="hidden md:flex gap-10 text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase">
           <a href="#" className="hover:text-terracotta-500 transition-colors">Visit</a>
