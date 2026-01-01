@@ -71,8 +71,9 @@ export default function LoadingScreen({ progress }: LoadingScreenProps) {
                 {/* Inspirational Quote */}
                 <div className="pt-8 opacity-80">
                     <p className="font-serif italic text-gray-500 text-lg leading-relaxed">
-                        "{quote}"
+                        &ldquo;{quote}&rdquo;
                     </p>
+
                 </div>
 
             </div>
