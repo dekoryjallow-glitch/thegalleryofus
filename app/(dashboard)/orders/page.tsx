@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Package, CheckCircle, Clock, XCircle } from "lucide-react";
+import { UserMenu } from "@/components/UserMenu";
 
 interface Order {
   id: string;
@@ -125,11 +126,18 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-black font-sans">
-      <header className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-[#FDFBF7]/80 backdrop-blur-md z-10">
-        <span className="font-serif text-2xl font-bold tracking-tighter">The Gallery of Us</span>
-        <Link href="/create" className="text-sm font-medium hover:underline flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" /> Zurück zum Start
+      <header className="py-4 px-6 md:px-12 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-[#FDFBF7]/80 backdrop-blur-md z-40">
+        <Link href="/" className="font-serif text-xl font-bold flex items-center gap-2 group">
+          <span className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-sm font-serif italic transition-transform group-hover:rotate-12">G</span>
+          <span className="hidden sm:inline">The Gallery of Us</span>
         </Link>
+
+        <div className="flex items-center gap-6">
+          <Link href="/create" className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-black transition-colors flex items-center gap-2">
+            <ArrowLeft className="w-3 h-3" /> Dashboard
+          </Link>
+          <UserMenu />
+        </div>
       </header>
 
       <main className="max-w-6xl mx-auto p-8 md:p-12">
@@ -248,5 +256,3 @@ export default function OrdersPage() {
     </div>
   );
 }
-
-
