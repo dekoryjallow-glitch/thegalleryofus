@@ -3,207 +3,209 @@
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Check, ArrowLeft, Loader2 } from "lucide-react";
+import { ShoppingBag, Check, ArrowLeft, Loader2, Sparkles, ShieldCheck } from "lucide-react";
 import { useState, Suspense } from "react";
+import { Button } from "@/components/ui/Button";
 
-// Die exakte UID für das Fulfillment später
 const GELATO_PRODUCT_UID = "framed_poster_mounted_premium_400x400-mm-16x16-inch_black_wood_w20xt20-mm_plexiglass_400x400-mm-16x16-inch_200-gsm-80lb-coated-silk_4-0_hor";
 
 function PreviewContent() {
   const searchParams = useSearchParams();
-  // Wir unterstützen Fallback, falls Nano-Banana mal ein Array oder String liefert
-  const imgParam = searchParams.get("img"); 
+  const imgParam = searchParams.get("img");
   const imgUrl = imgParam ? decodeURIComponent(imgParam) : null;
-  
+
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleCheckout = async () => {
-    if (!imgUrl) {
-      alert("Kein Bild gefunden. Bitte gehe zurück und erstelle ein neues Kunstwerk.");
-      return;
-    }
-
+    if (!imgUrl) return;
     setIsCheckingOut(true);
 
     try {
-      console.log("[Checkout] Starting checkout process...", { imageUrl: imgUrl?.substring(0, 50), gelatoProductUid: GELATO_PRODUCT_UID });
-      
       const response = await fetch("/api/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           imageUrl: imgUrl,
           gelatoProductUid: GELATO_PRODUCT_UID,
         }),
       });
 
-      console.log("[Checkout] Response status:", response.status, response.statusText);
-
       if (!response.ok) {
-        let errorData: any = {};
-        try {
-          errorData = await response.json();
-          console.error("[Checkout] Error response:", errorData);
-        } catch (parseError) {
-          console.error("[Checkout] Could not parse error response");
-          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
-        }
-        
-        // Wenn Unauthorized, leite zum Login weiter
-        if (response.status === 401 || errorData.error === "Unauthorized") {
-          console.log("[Checkout] User not authenticated, redirecting to login");
-          const currentUrl = encodeURIComponent(window.location.href);
-          window.location.href = `/login?redirect=${currentUrl}`;
+        if (response.status === 401) {
+          window.location.href = `/login?redirect=${encodeURIComponent(window.location.href)}`;
           return;
         }
-        
-        // Wenn 404, zeige spezifische Fehlermeldung
-        if (response.status === 404) {
-          console.error("[Checkout] 404 Error - Route not found");
-          alert("Die Checkout-Route wurde nicht gefunden. Bitte kontaktiere den Support oder versuche es später erneut.");
-          setIsCheckingOut(false);
-          return;
-        }
-        
-        throw new Error(errorData.error || errorData.details || `HTTP ${response.status}: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Checkout fehlgeschlagen");
       }
 
       const data = await response.json();
-      console.log("[Checkout] Success response:", { hasUrl: !!data.url, sessionId: data.sessionId });
-      
       if (data.url) {
-        // Zeige Ladeanzeige während der Weiterleitung
-        console.log("[Checkout] Redirecting to Stripe Checkout:", data.url);
-        
-        // Kurze Verzögerung für bessere UX (zeigt "Weiterleitung zu Stripe..." an)
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // Redirect zu Stripe Checkout - Stripe leitet nach Zahlung automatisch zur Success Page weiter
         window.location.href = data.url;
       } else {
-        console.error("[Checkout] No URL in response:", data);
-        throw new Error("Keine Checkout-URL erhalten. Bitte versuche es erneut.");
+        throw new Error("Keine Checkout-URL erhalten.");
       }
     } catch (error: any) {
-      console.error("[Checkout] Error:", error);
-      const errorMessage = error.message || "Unbekannter Fehler";
-      alert(`Fehler beim Checkout: ${errorMessage}`);
+      alert(`Fehler: ${error.message}`);
       setIsCheckingOut(false);
     }
   };
 
   if (!imgUrl) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
-        <div className="text-center">
-          <p className="text-lg mb-4">Lade Kunstwerk...</p>
-          <Link href="/create" className="text-blue-500 hover:underline">
-            Zurück zum Start
-          </Link>
+      <div className="min-h-screen flex items-center justify-center bg-cream-50">
+        <div className="text-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-terracotta-500" />
+          <p className="font-serif italic text-gray-500">Dein Unikat wird vorbereitet...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-black font-sans selection:bg-black selection:text-white">
-      {/* Simple Header */}
-      <header className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-[#FDFBF7]/80 backdrop-blur-md z-10">
-        <span className="font-serif text-2xl font-bold tracking-tighter">The Gallery of Us</span>
-        <Link href="/create" className="text-sm font-medium hover:underline flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" /> Zurück zum Start
+    <div className="min-h-screen bg-cream-50 text-gray-900 font-sans selection:bg-terracotta-500/30 selection:text-terracotta-900">
+      <header className="p-6 md:px-12 flex items-center justify-between sticky top-0 bg-cream-50/80 backdrop-blur-md z-40 border-b border-cream-200/50">
+        <Link href="/" className="font-serif text-xl font-bold flex items-center gap-2">
+          <span className="w-8 h-8 bg-terracotta-500 rounded-full flex items-center justify-center text-white text-sm font-serif italic">G</span>
+          <span className="hidden sm:inline">The Gallery of Us</span>
+        </Link>
+        <Link href="/create" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors flex items-center gap-2">
+          <ArrowLeft className="w-3 h-3" /> Zurück
         </Link>
       </header>
 
-      <main className="max-w-7xl mx-auto p-4 md:p-12 lg:p-20">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
-          {/* MOCKUP SECTION - Der visuelle Hero */}
-          <div className="relative w-full flex justify-center bg-white p-12 rounded-sm shadow-sm border border-gray-100">
-            {/* Der Rahmen-Simulator */}
-            <div className="relative w-full max-w-[500px] aspect-square bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] border-[16px] border-[#1a1a1a]">
-              {/* Passepartout (Weißer Innenrand) */}
-              <div className="absolute inset-0 border-[24px] border-white">
-                {/* Das Kunstwerk */}
-                <div className="relative w-full h-full bg-gray-50 overflow-hidden">
+      <main className="max-w-6xl mx-auto px-6 py-12 md:py-20">
+        <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start">
+
+          {/* VISUAL PREVIEW - Mobile First (Top) */}
+          <div className="space-y-8 animate-fade-in group">
+            <div className="relative w-full aspect-square bg-white shadow-2xl overflow-hidden rounded-sm border-[12px] md:border-[20px] border-gray-900 ring-1 ring-black/5">
+              {/* Inner White Matte */}
+              <div className="absolute inset-0 border-[20px] md:border-[40px] border-white flex items-center justify-center">
+                <div className="relative w-full h-full bg-cream-50 overflow-hidden shadow-inner">
                   <Image
                     src={imgUrl}
-                    alt="Dein personalisiertes Kunstwerk"
+                    alt="Dein Kunstwerk"
                     fill
-                    className="object-cover"
+                    className="object-contain p-4 md:p-8 transition-transform duration-1000 group-hover:scale-110"
                     unoptimized
                   />
-                  {/* Leichter Glanz-Effekt für das Plexiglas */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-30 pointer-events-none" />
+                  {/* Subtle Glass Reflection */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-40 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="shrink-0 w-24 h-24 bg-white border border-cream-200 rounded-lg overflow-hidden cursor-pointer hover:border-terracotta-500 transition-colors shadow-sm">
+                  <div className="w-full h-full bg-cream-100 flex items-center justify-center text-[10px] text-gray-400 font-bold uppercase tracking-tighter text-center px-1">
+                    {i === 1 ? 'Nahaufnahme' : i === 2 ? 'Im Raum' : 'Textur'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* PRODUCT INFOS */}
+          <div className="space-y-10 lg:pt-4">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-terracotta-600 font-bold text-[10px] uppercase tracking-[0.3em]">
+                <Sparkles className="w-3 h-3" /> Einzigartiges Meisterwerk
+              </div>
+              <h1 className="font-serif text-4xl md:text-6xl font-bold text-gray-900 leading-[1.1]">
+                Die Ewige <br /><span className="italic text-gray-400 font-normal">Verbindung.</span>
+              </h1>
+              <p className="text-gray-500 text-lg font-light leading-relaxed">
+                Handkuratiertes One-Line Kunstwerk, basierend auf euren Merkmalen. Ein minimalistisches Statement für dein Zuhause.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 py-8 border-y border-cream-200">
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Format</p>
+                <p className="text-lg font-serif">40 x 40 cm</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Druck</p>
+                <p className="text-lg font-serif">Museumsqualität</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Rahmen</p>
+                <p className="text-lg font-serif">Echtholz (Schwarz)</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Material</p>
+                <p className="text-lg font-serif">200g Archivpapier</p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-end justify-between">
+                <div className="space-y-1">
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Preis inkl. MwSt.</p>
+                  <p className="text-4xl md:text-5xl font-serif font-bold">49,00 €</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] text-terracotta-500 font-bold uppercase tracking-widest">Kostenloser Versand</p>
+                  <p className="text-xs text-gray-400">Lieferzeit: 3-5 Werktage</p>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleCheckout}
+                disabled={isCheckingOut}
+                className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white h-16 rounded-full text-xl shadow-2xl shadow-terracotta-500/20 active:scale-95 transition-all flex items-center justify-center gap-3"
+              >
+                {isCheckingOut ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Bereite Versand vor...</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-5 h-5" />
+                    <span>In den Warenkorb</span>
+                  </>
+                )}
+              </Button>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <ShieldCheck className="w-5 h-5 text-gray-400" />
+                  <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Sicher Zahlen</span>
+                </div>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Schneller Druck</span>
+                </div>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                  <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Globaler Versand</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* PRODUCT DETAILS */}
-          <div className="space-y-8">
-            <div>
-              <div className="inline-block bg-black text-white text-xs px-2 py-1 mb-4 tracking-widest uppercase font-bold">Unikat</div>
-              <h1 className="text-4xl md:text-6xl font-serif leading-[1.1] mb-4">
-                The Connected Soul
-              </h1>
-              <p className="text-xl text-gray-500 font-light">
-                Abstract Continuous Line Art
-              </p>
-            </div>
-
-            <div className="border-t border-b border-gray-200 py-6 space-y-4">
-              <div className="flex justify-between items-center text-lg">
-                <span>Format</span>
-                <span className="font-medium">40 x 40 cm</span>
-              </div>
-              <div className="flex justify-between items-center text-lg">
-                <span>Rahmen</span>
-                <span className="font-medium">Echtholz (Schwarz)</span>
-              </div>
-              <div className="flex justify-between items-center text-lg">
-                <span>Papier</span>
-                <span className="font-medium">200g/m² Premium Silk</span>
-              </div>
-            </div>
-
-            <div className="flex items-end justify-between">
-               <div>
-                 <p className="text-sm text-gray-400 mb-1">Preis inkl. MwSt.</p>
-                 <p className="text-4xl font-serif">49,00 €</p>
-               </div>
-            </div>
-
-            <button
-              onClick={handleCheckout}
-              disabled={isCheckingOut}
-              className="w-full bg-black text-white h-16 rounded-none text-xl font-medium hover:bg-gray-800 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 relative overflow-hidden"
-            >
-              {isCheckingOut ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Weiterleitung zu Stripe...</span>
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-                    <div className="h-full bg-white animate-pulse" style={{ width: '100%' }} />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-5 h-5" />
-                  Jetzt bestellen
-                </>
-              )}
-            </button>
-            
-            <p className="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-2">
-              <Check className="w-3 h-3" /> Kostenloser Versand innerhalb Deutschlands
-            </p>
-          </div>
-
         </div>
       </main>
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease-out forwards;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }
@@ -211,8 +213,8 @@ function PreviewContent() {
 export default function ResultPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
-        <p>Lädt...</p>
+      <div className="min-h-screen flex items-center justify-center bg-cream-50">
+        <Loader2 className="w-8 h-8 animate-spin text-terracotta-500" />
       </div>
     }>
       <PreviewContent />
