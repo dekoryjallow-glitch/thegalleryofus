@@ -319,34 +319,6 @@ export default async function Home() {
         </div>
       </footer>
 
-      {/* Simple Global Animations */}
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.8s ease-out forwards;
-        }
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-          100% { transform: translateY(0px); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        .gallery-frame {
-          padding: 1px;
-          background: linear-gradient(135deg, #DFCAC0 0%, #F9F5F0 100%);
-        }
-        @media (max-width: 640px) {
-          .container {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-          }
-        }
-      `}</style>
     </main>
   );
 }
