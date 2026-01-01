@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { LogOut, User, Settings, Package } from "lucide-react";
+import { LogOut, User as UserIcon, Settings, Package } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -71,7 +71,7 @@ export function UserMenu() {
                             className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors group"
                             onClick={() => setIsOpen(false)}
                         >
-                            <User className="w-4 h-4 text-gray-400 group-hover:text-black" />
+                            <UserIcon className="w-4 h-4 text-gray-400 group-hover:text-black" />
                             Mein Profil
                         </Link>
 

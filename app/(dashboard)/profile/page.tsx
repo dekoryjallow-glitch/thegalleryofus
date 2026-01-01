@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { User, Mail, Calendar, Package, ArrowLeft, LogOut, Settings, Shield } from "lucide-react";
+import { User as UserIcon, Mail, Calendar, Package, ArrowLeft, LogOut, Settings, Shield } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserMenu } from "@/components/UserMenu";
@@ -11,7 +11,7 @@ export default function ProfilePage() {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     useEffect(() => {
         async function fetchUser() {
@@ -67,7 +67,7 @@ export default function ProfilePage() {
                     <div className="md:col-span-2 space-y-8">
                         <section className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
                             <h2 className="text-xl font-serif mb-6 flex items-center gap-2">
-                                <User className="w-5 h-5 text-gray-400" />
+                                <UserIcon className="w-5 h-5 text-gray-400" />
                                 Persönliche Informationen
                             </h2>
 
