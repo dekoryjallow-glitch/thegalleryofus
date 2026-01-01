@@ -15,7 +15,7 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const redirectUrl = searchParams.get("redirect") || "/create";
+  const redirectUrl = searchParams.get("returnTo") || searchParams.get("redirect") || "/create";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
