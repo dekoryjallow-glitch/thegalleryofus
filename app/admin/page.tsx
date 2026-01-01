@@ -1,3 +1,4 @@
+// Updated Admin Dashboard UI
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
     TrendingUp,
