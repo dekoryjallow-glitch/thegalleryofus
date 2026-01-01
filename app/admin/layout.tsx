@@ -1,5 +1,4 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { LayoutDashboard, ShoppingBag, LogOut, ArrowLeft } from 'lucide-react'
@@ -11,22 +10,16 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode
 }) {
-    const cookieStore = cookies()
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                getAll() {
-                    return cookieStore.getAll()
-                },
-            },
-        }
-    )
+    const supabase = await createClient()
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user || user.email !== ADMIN_EMAIL) {
+    if (!user) {
+        redirect('/login?returnTo=/admin')
+    }
+
+    if (user.email !== ADMIN_EMAIL) {
+        console.warn(`Access denied for user: ${user.email}`)
         redirect('/')
     }
 

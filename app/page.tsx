@@ -3,7 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CheckoutButton from '@/components/CheckoutButton';
 
-export default function Home() {
+import { createClient } from '@/lib/supabase/server';
+
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAdmin = user?.email === 'dekory@onvisimedia.com';
+
   return (
     <main className="min-h-screen bg-cream-50 flex flex-col selection:bg-terracotta-500/30 selection:text-terracotta-900">
       {/* Navigation / Header */}
@@ -16,11 +22,22 @@ export default function Home() {
           <a href="#" className="hover:text-terracotta-500 transition-colors">Visit</a>
           <a href="#" className="hover:text-terracotta-500 transition-colors">Exhibitions</a>
           <a href="#" className="hover:text-terracotta-500 transition-colors">Shop</a>
+          {isAdmin && (
+            <Link href="/admin" className="text-terracotta-500 hover:text-terracotta-600 font-bold underline decoration-2 underline-offset-4">
+              Admin Panel
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
-            Login
-          </Link>
+          {!user ? (
+            <Link href="/login" className="text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
+              Login
+            </Link>
+          ) : (
+            <Link href="/orders" className="text-[11px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
+              Meine Bestellungen
+            </Link>
+          )}
           <Button href="/create" variant="primary" className="btn-premium bg-terracotta-500 hover:bg-terracotta-600 text-white !px-8">
             Create Art
           </Button>
