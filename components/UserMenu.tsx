@@ -10,7 +10,7 @@ export function UserMenu() {
     const [user, setUser] = useState<any>(null);
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
     const router = useRouter();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export function UserMenu() {
 
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    }, [supabase, router]);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
