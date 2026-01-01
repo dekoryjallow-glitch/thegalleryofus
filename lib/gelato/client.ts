@@ -38,14 +38,11 @@ class GelatoClient {
   private baseUrl: string;
 
   constructor() {
-    if (!process.env.GELATO_API_KEY) {
-      throw new Error("GELATO_API_KEY environment variable is not set");
-    }
-    this.apiKey = process.env.GELATO_API_KEY.trim();
+    this.apiKey = (process.env.GELATO_API_KEY || "").trim();
     this.baseUrl = GELATO_API_BASE_URL;
 
     // Validiere API Key Format (sollte nicht zu kurz sein)
-    if (this.apiKey.length < 10) {
+    if (this.apiKey && this.apiKey.length < 10) {
       console.warn("[Gelato Client] WARNING: GELATO_API_KEY seems too short. Expected format: X-API-KEY header value");
     }
   }
@@ -54,6 +51,9 @@ class GelatoClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
+    if (!this.apiKey) {
+      throw new Error("GELATO_API_KEY environment variable is not set. Please check your environment variables.");
+    }
     const url = `${this.baseUrl}${endpoint}`;
 
     // Gelato API v4 verwendet X-API-KEY Header (primär)
