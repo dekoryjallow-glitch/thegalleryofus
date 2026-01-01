@@ -2,3 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --cream-50: 34 33% 96%;
+    --cream-100: 33 28% 90%;
+    --cream-200: 17 29% 81%;
+    --terracotta-500: 19 46% 56%;
+    --terracotta-600: 19 36% 47%;
+    --gold-400: 45 61% 52%;
+    --gold-500: 46 66% 46%;
+  }
+
+  body {
+    @apply bg-[#F9F5F0] text-gray-900;
+  }
+}
+
+@layer components {
+  .gallery-frame {
+    @apply relative bg-white p-4 shadow-2xl transition-all duration-700 hover:scale-[1.01] border border-stone-100;
+  }
+  
+  .btn-premium {
+    @apply px-8 py-3 rounded-full font-medium transition-all transform hover:-translate-y-1 hover:shadow-lg active:scale-95;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
