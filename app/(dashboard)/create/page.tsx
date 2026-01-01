@@ -33,7 +33,7 @@ export default function CreatePage() {
     setIsLoading(true);
     setLoadingProgress(5); // Start progress
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:31',message:'handleGenerate started',data:{hasFile1:!!file1,hasFile2:!!file2,file1Size:file1?.size,file2Size:file2?.size},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:31', message: 'handleGenerate started', data: { hasFile1: !!file1, hasFile2: !!file2, file1Size: file1?.size, file2Size: file2?.size }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
     // #endregion
 
     try {
@@ -41,23 +41,23 @@ export default function CreatePage() {
       formData.append("selfie1", file1);
       formData.append("selfie2", file2);
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:38',message:'FormData created, starting fetch to /api/generate',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:38', message: 'FormData created, starting fetch to /api/generate', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
       // #endregion
 
       // 1. Upload starten
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:42',message:'Starting fetch to /api/generate',data:{url:'/api/generate',method:'POST',file1Size:file1?.size,file2Size:file2?.size},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:42', message: 'Starting fetch to /api/generate', data: { url: '/api/generate', method: 'POST', file1Size: file1?.size, file2Size: file2?.size }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
       // #endregion
       const fetchStartTime = Date.now();
-      
+
       // Erstelle einen AbortController für Timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 Sekunden Timeout
-      
+
       let res;
       try {
-        res = await fetch("/api/generate", { 
-          method: "POST", 
+        res = await fetch("/api/generate", {
+          method: "POST",
           body: formData,
           signal: controller.signal
         });
@@ -65,7 +65,7 @@ export default function CreatePage() {
       } catch (fetchError: any) {
         clearTimeout(timeoutId);
         // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:52',message:'Fetch to /api/generate failed',data:{error:fetchError?.message,errorName:fetchError?.name,isAbort:fetchError?.name==='AbortError',timeElapsed:Date.now()-fetchStartTime},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:52', message: 'Fetch to /api/generate failed', data: { error: fetchError?.message, errorName: fetchError?.name, isAbort: fetchError?.name === 'AbortError', timeElapsed: Date.now() - fetchStartTime }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
         // #endregion
         if (fetchError.name === 'AbortError') {
           throw new Error("Request timeout: Der Server hat nicht innerhalb von 60 Sekunden geantwortet. Bitte prüfe, ob der Server läuft.");
@@ -73,22 +73,22 @@ export default function CreatePage() {
         throw new Error(`Network error: ${fetchError.message || "Failed to fetch"}`);
       }
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:50',message:'Fetch to /api/generate completed',data:{status:res.status,statusText:res.statusText,ok:res.ok,timeElapsed:Date.now()-fetchStartTime},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:50', message: 'Fetch to /api/generate completed', data: { status: res.status, statusText: res.statusText, ok: res.ok, timeElapsed: Date.now() - fetchStartTime }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
       // #endregion
 
       if (!res.ok) {
         // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:44',message:'Fetch response not ok',data:{status:res.status,statusText:res.statusText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:44', message: 'Fetch response not ok', data: { status: res.status, statusText: res.statusText }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
         // #endregion
         let errorData: any = {};
         try {
           errorData = await res.json();
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:47',message:'Error data parsed from response',data:{error:errorData.error,errorName:errorData.errorName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:47', message: 'Error data parsed from response', data: { error: errorData.error, errorName: errorData.errorName }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
           // #endregion
         } catch (parseError) {
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:49',message:'Failed to parse error response',data:{parseError:parseError?.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:49', message: 'Failed to parse error response', data: { parseError: (parseError as any)?.message }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
           // #endregion
           // Ignore parse error
         }
@@ -97,7 +97,7 @@ export default function CreatePage() {
 
       const data = await res.json();
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'create/page.tsx:54',message:'Response data parsed',data:{hasGenerationId:!!data.generationId,hasReplicateId:!!data.replicateId,generationId:data.generationId,replicateId:data.replicateId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'create/page.tsx:54', message: 'Response data parsed', data: { hasGenerationId: !!data.generationId, hasReplicateId: !!data.replicateId, generationId: data.generationId, replicateId: data.replicateId }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
       // #endregion
       const { generationId, replicateId } = data;
 
