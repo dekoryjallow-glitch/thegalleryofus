@@ -227,7 +227,6 @@ function UploadSlot({ label, file, preview, onChange }: UploadSlotProps) {
         ref={inputRef}
         className="hidden"
         accept="image/*"
-        capture="user"
         onChange={(e) => {
           e.target.files?.[0] && onChange(e.target.files[0]);
         }}

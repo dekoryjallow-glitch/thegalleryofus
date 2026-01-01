@@ -77,11 +77,11 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
-                        <option value="all">Alle Stati</option>
+                        <option value="all">Alle Status</option>
                         <option value="paid">Bezahlt</option>
-                        <option value="pending">Pending</option>
-                        <option value="fulfilled">Fulfilled</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="pending">Ausstehend</option>
+                        <option value="fulfilled">Abgeschlossen</option>
+                        <option value="cancelled">Storniert</option>
                     </select>
                 </div>
             </div>
@@ -127,12 +127,28 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
                                         {formatCurrency(order.amount_cents)}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight ${order.status === 'paid' ? 'bg-green-100 text-green-700' :
-                                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                    'bg-blue-100 text-blue-700'
-                                            }`}>
-                                            {order.status}
-                                        </span>
+                                        {(() => {
+                                            const statusStyles: Record<string, string> = {
+                                                paid: "bg-green-100 text-green-700 border-green-200",
+                                                pending: "bg-amber-100 text-amber-700 border-amber-200",
+                                                fulfilled: "bg-blue-100 text-blue-700 border-blue-200",
+                                                cancelled: "bg-red-100 text-red-700 border-red-200",
+                                            };
+                                            const statusLabels: Record<string, string> = {
+                                                paid: "Bezahlt",
+                                                pending: "Ausstehend",
+                                                fulfilled: "Abgeschlossen",
+                                                cancelled: "Storniert",
+                                            };
+                                            const style = statusStyles[order.status] || "bg-gray-100 text-gray-700 border-gray-200";
+                                            const label = statusLabels[order.status] || order.status;
+
+                                            return (
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight border ${style}`}>
+                                                    {label}
+                                                </span>
+                                            );
+                                        })()}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex flex-col items-end gap-2">

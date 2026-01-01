@@ -105,7 +105,11 @@ export default async function AdminDashboard() {
                     {orders?.slice(0, 5).map((order) => (
                         <div key={order.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-4">
-                                <div className={`w-2 h-2 rounded-full ${order.status === 'paid' ? 'bg-green-500' : order.status === 'pending' ? 'bg-yellow-500' : 'bg-blue-500'}`} />
+                                <div className={`w-2 h-2 rounded-full ${order.status === 'paid' ? 'bg-green-500' :
+                                    order.status === 'pending' ? 'bg-amber-500' :
+                                        order.status === 'fulfilled' ? 'bg-blue-500' :
+                                            'bg-gray-400'
+                                    }`} />
                                 <div>
                                     <p className="text-sm font-medium text-gray-900">Bestellung #{order.id.substring(0, 8)}</p>
                                     <p className="text-xs text-gray-500">{new Date(order.created_at).toLocaleString('de-DE')}</p>
@@ -113,8 +117,15 @@ export default async function AdminDashboard() {
                             </div>
                             <div className="text-right">
                                 <p className="text-sm font-bold text-gray-900">{formatCurrency(order.amount_cents)}</p>
-                                <p className={`text-xs font-medium uppercase ${order.status === 'paid' ? 'text-green-600' : 'text-gray-500'}`}>
-                                    {order.status}
+                                <p className={`text-[10px] font-bold uppercase tracking-wider ${order.status === 'paid' ? 'text-green-600' :
+                                    order.status === 'pending' ? 'text-amber-600' :
+                                        order.status === 'fulfilled' ? 'text-blue-600' :
+                                            'text-gray-500'
+                                    }`}>
+                                    {order.status === 'paid' ? 'Bezahlt' :
+                                        order.status === 'pending' ? 'Ausstehend' :
+                                            order.status === 'fulfilled' ? 'Versendet' :
+                                                order.status}
                                 </p>
                             </div>
                         </div>
