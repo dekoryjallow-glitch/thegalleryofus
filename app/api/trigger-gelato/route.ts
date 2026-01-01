@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         const { searchParams } = new URL(req.url);
         const sessionId = searchParams.get("session_id");
         const orderId = searchParams.get("order_id");
-        
+
         if (!sessionId && !orderId) {
             return NextResponse.json({
                 error: "session_id or order_id required",
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
                 .select("*")
                 .eq("id", orderId)
                 .single();
-            
+
             if (error || !data) {
                 return NextResponse.json({
                     error: "Order not found",
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
                 .select("*")
                 .eq("stripe_checkout_id", sessionId)
                 .single();
-            
+
             if (error || !data) {
                 return NextResponse.json({
                     error: "Order not found",
@@ -78,23 +78,20 @@ export async function POST(req: Request) {
         // Hole Stripe Session für Versandadresse (falls vorhanden)
         let shippingAddress = null;
         let shippingName = "Customer";
-        
+
         if (sessionId && process.env.STRIPE_SECRET_KEY) {
             try {
                 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-                    apiVersion: "2024-11-20.acacia",
+                    apiVersion: "2023-10-16",
                 });
                 const session = await stripe.checkout.sessions.retrieve(sessionId);
-                
-                shippingAddress = session.shipping_details?.address || 
-                                 session.shipping?.address || 
-                                 session.shipping_address_collection?.address ||
-                                 (session.customer_details?.address as any);
-                shippingName = session.shipping_details?.name || 
-                              session.customer_details?.name || 
-                              session.shipping?.name ||
-                              "Customer";
-                
+
+                shippingAddress = session.shipping_details?.address ||
+                    (session.customer_details?.address as any);
+                shippingName = session.shipping_details?.name ||
+                    session.customer_details?.name ||
+                    "Customer";
+
                 console.log("[Trigger Gelato] Stripe session retrieved:", {
                     hasShippingAddress: !!shippingAddress,
                     shippingName,
@@ -121,17 +118,17 @@ export async function POST(req: Request) {
         }
 
         // Validiere Versandadresse
-        const isValidShippingAddress = shippingAddress && 
-            shippingAddress.line1 && 
-            shippingAddress.line1.trim() !== "" && 
+        const isValidShippingAddress = shippingAddress &&
+            shippingAddress.line1 &&
+            shippingAddress.line1.trim() !== "" &&
             shippingAddress.line1 !== "TBD" &&
-            shippingAddress.city && 
-            shippingAddress.city.trim() !== "" && 
+            shippingAddress.city &&
+            shippingAddress.city.trim() !== "" &&
             shippingAddress.city !== "TBD" &&
-            shippingAddress.postal_code && 
-            shippingAddress.postal_code.trim() !== "" && 
+            shippingAddress.postal_code &&
+            shippingAddress.postal_code.trim() !== "" &&
             shippingAddress.postal_code !== "00000" &&
-            shippingAddress.country && 
+            shippingAddress.country &&
             shippingAddress.country.trim().length === 2;
 
         if (!isValidShippingAddress) {
