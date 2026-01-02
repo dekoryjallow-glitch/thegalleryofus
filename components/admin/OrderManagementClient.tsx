@@ -274,7 +274,7 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
                                 />
                             </div>
                             <p className="text-[10px] text-gray-400 leading-relaxed italic">
-                                Beim Bestätigen wird der Status auf "Abgeschlossen" gesetzt und der Kunde erhält automatisch eine Versandbestätigung per E-Mail.
+                                Beim Bestätigen wird der Status auf &quot;Abgeschlossen&quot; gesetzt und der Kunde erhält automatisch eine Versandbestätigung per E-Mail.
                             </p>
                         </div>
                         <div className="px-6 py-4 bg-gray-50 flex gap-3">
