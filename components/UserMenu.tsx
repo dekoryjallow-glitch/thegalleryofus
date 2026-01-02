@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { LogOut, User as UserIcon, Settings, Package } from "lucide-react";
+import { LogOut, User as UserIcon, Settings, Package, LayoutDashboard } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -57,6 +57,17 @@ export function UserMenu() {
                     </div>
 
                     <div className="p-2">
+                        {user.email === 'dekory@onvisimedia.com' && (
+                            <Link
+                                href="/admin"
+                                className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-terracotta-600 font-bold hover:bg-terracotta-50 rounded-lg transition-colors group mb-1 border border-terracotta-100"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <LayoutDashboard className="w-4 h-4 text-terracotta-500" />
+                                Admin Dashboard
+                            </Link>
+                        )}
+
                         <Link
                             href="/orders"
                             className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors group"

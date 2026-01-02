@@ -8,6 +8,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/Button";
 
 import { Logo } from "@/components/Logo";
+import { UserMenu } from "@/components/UserMenu";
 
 export default function CreatePage() {
   const [file1, setFile1] = useState<File | null>(null);
@@ -135,9 +136,12 @@ export default function CreatePage() {
         <Link href="/" className="transition-opacity hover:opacity-80">
           <Logo className="h-6 md:h-8 w-auto" />
         </Link>
-        <Link href="/" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
-          Abbrechen
-        </Link>
+        <div className="flex items-center gap-6">
+          <UserMenu />
+          <Link href="/" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
+            Abbrechen
+          </Link>
+        </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-12 md:py-20">

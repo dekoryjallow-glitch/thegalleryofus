@@ -21,6 +21,7 @@ interface Order {
 }
 
 import { Logo } from "@/components/Logo";
+import { UserMenu } from "@/components/UserMenu";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -109,6 +110,9 @@ function SuccessContent() {
         <Link href="/" className="transition-opacity hover:opacity-80">
           <Logo className="h-6 md:h-8 w-auto" />
         </Link>
+        <div className="flex items-center gap-6">
+          <UserMenu />
+        </div>
       </header>
 
       <main className="max-w-4xl mx-auto p-8 md:p-12">

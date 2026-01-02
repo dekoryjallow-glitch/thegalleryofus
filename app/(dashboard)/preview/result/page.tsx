@@ -8,6 +8,7 @@ import { useState, Suspense } from "react";
 import { Button } from "@/components/ui/Button";
 import ShippingAddressModal from "@/components/preview/ShippingAddressModal";
 import { Logo } from "@/components/Logo";
+import { UserMenu } from "@/components/UserMenu";
 
 const GELATO_PRODUCT_UID = "framed_poster_mounted_premium_400x400-mm-16x16-inch_black_wood_w20xt20-mm_plexiglass_400x400-mm-16x16-inch_200-gsm-80lb-coated-silk_4-0_hor";
 
@@ -81,9 +82,12 @@ function PreviewContent() {
         <Link href="/" className="transition-opacity hover:opacity-80">
           <Logo className="h-6 md:h-8 w-auto" />
         </Link>
-        <Link href="/create" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors flex items-center gap-2">
-          <ArrowLeft className="w-3 h-3" /> Zurück
-        </Link>
+        <div className="flex items-center gap-6">
+          <UserMenu />
+          <Link href="/create" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors flex items-center gap-2">
+            <ArrowLeft className="w-3 h-3" /> Zurück
+          </Link>
+        </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-12 md:py-20">
