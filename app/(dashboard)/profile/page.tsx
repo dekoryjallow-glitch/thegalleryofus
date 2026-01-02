@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User as UserIcon, Mail, Calendar, Package, ArrowLeft, LogOut, Settings, Shield } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserMenu } from "@/components/UserMenu";
@@ -43,9 +44,8 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-[#FDFBF7] text-black font-sans">
             <header className="py-4 px-6 md:px-12 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-[#FDFBF7]/80 backdrop-blur-md z-40">
-                <Link href="/" className="font-serif text-xl font-bold flex items-center gap-2 group">
-                    <span className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-sm font-serif italic transition-transform group-hover:rotate-12">G</span>
-                    <span className="hidden sm:inline">The Gallery of Us</span>
+                <Link href="/" className="transition-opacity hover:opacity-80">
+                    <Logo className="h-6 md:h-8 w-auto" />
                 </Link>
 
                 <div className="flex items-center gap-6">

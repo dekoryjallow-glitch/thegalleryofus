@@ -32,7 +32,7 @@ export default function CheckoutButton() {
 
     return (
         <Button onClick={handleCheckout} disabled={loading}>
-            {loading ? "Loading..." : "Buy Generation ($5.00)"}
+            {loading ? "Wird geladen..." : "Jetzt für 74,90 € sichern"}
         </Button>
     );
 }

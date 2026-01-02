@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/Button";
 
+import { Logo } from "@/components/Logo";
+
 export default function CreatePage() {
   const [file1, setFile1] = useState<File | null>(null);
   const [file2, setFile2] = useState<File | null>(null);
@@ -130,9 +132,8 @@ export default function CreatePage() {
   return (
     <div className="min-h-screen bg-cream-50 text-gray-900 font-sans selection:bg-terracotta-500/30 selection:text-terracotta-900">
       <header className="py-6 px-6 md:px-12 flex items-center justify-between sticky top-0 bg-cream-50/80 backdrop-blur-md z-40">
-        <Link href="/" className="font-serif text-xl font-bold flex items-center gap-2 group">
-          <span className="w-8 h-8 bg-terracotta-500 rounded-full flex items-center justify-center text-white text-sm font-serif italic transition-transform group-hover:rotate-12">G</span>
-          <span className="hidden sm:inline">The Gallery of Us</span>
+        <Link href="/" className="transition-opacity hover:opacity-80">
+          <Logo className="h-6 md:h-8 w-auto" />
         </Link>
         <Link href="/" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
           Abbrechen

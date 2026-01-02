@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS orders (
     
     -- Order Details
     status order_status DEFAULT 'pending',
-    amount_cents INT NOT NULL, -- In Cent (z.B. 4900 = 49,00€)
+    amount_cents INT NOT NULL, -- In Cent (z.B. 7490 = 74,90€)
     currency TEXT DEFAULT 'EUR',
     
     -- Image URL (für direkte Orders ohne Generation)

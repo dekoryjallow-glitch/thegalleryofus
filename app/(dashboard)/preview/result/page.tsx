@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ShoppingBag, Check, ArrowLeft, Loader2, Sparkles, ShieldCheck } from "lucide-react";
 import { useState, Suspense } from "react";
 import { Button } from "@/components/ui/Button";
+import ShippingAddressModal from "@/components/preview/ShippingAddressModal";
+import { Logo } from "@/components/Logo";
 
 const GELATO_PRODUCT_UID = "framed_poster_mounted_premium_400x400-mm-16x16-inch_black_wood_w20xt20-mm_plexiglass_400x400-mm-16x16-inch_200-gsm-80lb-coated-silk_4-0_hor";
 
@@ -15,8 +17,9 @@ function PreviewContent() {
   const imgUrl = imgParam ? decodeURIComponent(imgParam) : null;
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCheckout = async () => {
+  const handleConfirmCheckout = async (addressData: any) => {
     if (!imgUrl) return;
     setIsCheckingOut(true);
 
@@ -27,6 +30,16 @@ function PreviewContent() {
         body: JSON.stringify({
           imageUrl: imgUrl,
           gelatoProductUid: GELATO_PRODUCT_UID,
+          shippingAddress: {
+            name: addressData.name,
+            addressLine1: addressData.addressLine1,
+            addressLine2: addressData.addressLine2,
+            city: addressData.city,
+            postal_code: addressData.postalCode, // Note snake_case for consistency with Stripe-like objects if needed, or mapping later
+            country: addressData.country,
+            state: "" // Optional/Auto-detected usually
+          },
+          customerEmail: addressData.email
         }),
       });
 
@@ -65,9 +78,8 @@ function PreviewContent() {
   return (
     <div className="min-h-screen bg-cream-50 text-gray-900 font-sans selection:bg-terracotta-500/30 selection:text-terracotta-900">
       <header className="p-6 md:px-12 flex items-center justify-between sticky top-0 bg-cream-50/80 backdrop-blur-md z-40 border-b border-cream-200/50">
-        <Link href="/" className="font-serif text-xl font-bold flex items-center gap-2">
-          <span className="w-8 h-8 bg-terracotta-500 rounded-full flex items-center justify-center text-white text-sm font-serif italic">G</span>
-          <span className="hidden sm:inline">The Gallery of Us</span>
+        <Link href="/" className="transition-opacity hover:opacity-80">
+          <Logo className="h-6 md:h-8 w-auto" />
         </Link>
         <Link href="/create" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors flex items-center gap-2">
           <ArrowLeft className="w-3 h-3" /> Zurück
@@ -144,7 +156,7 @@ function PreviewContent() {
               <div className="flex items-end justify-between">
                 <div className="space-y-1">
                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Preis inkl. MwSt.</p>
-                  <p className="text-4xl md:text-5xl font-serif font-bold">49,00 €</p>
+                  <p className="text-4xl md:text-5xl font-serif font-bold">74,90 €</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] text-terracotta-500 font-bold uppercase tracking-widest">Kostenloser Versand</p>
@@ -153,7 +165,7 @@ function PreviewContent() {
               </div>
 
               <Button
-                onClick={handleCheckout}
+                onClick={() => setIsModalOpen(true)}
                 disabled={isCheckingOut}
                 className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white h-16 rounded-full text-xl shadow-2xl shadow-terracotta-500/20 active:scale-95 transition-all flex items-center justify-center gap-3"
               >
@@ -169,6 +181,13 @@ function PreviewContent() {
                   </>
                 )}
               </Button>
+
+              <ShippingAddressModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleConfirmCheckout}
+                isLoading={isCheckingOut}
+              />
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col items-center gap-2 text-center">

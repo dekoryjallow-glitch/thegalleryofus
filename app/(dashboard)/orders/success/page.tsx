@@ -20,6 +20,8 @@ interface Order {
   paid_at: string | null;
 }
 
+import { Logo } from "@/components/Logo";
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
@@ -104,9 +106,8 @@ function SuccessContent() {
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-black font-sans">
       <header className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-[#FDFBF7]/80 backdrop-blur-md z-10">
-        <span className="font-serif text-2xl font-bold tracking-tighter">The Gallery of Us</span>
-        <Link href="/create" className="text-sm font-medium hover:underline flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" /> Zurück zum Start
+        <Link href="/" className="transition-opacity hover:opacity-80">
+          <Logo className="h-6 md:h-8 w-auto" />
         </Link>
       </header>
 
@@ -147,7 +148,7 @@ function SuccessContent() {
               {/* Order Details Card */}
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 className="text-2xl font-serif mb-6">Bestelldetails</h2>
-                
+
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Left: Order Info */}
                   <div className="space-y-4">
@@ -155,24 +156,24 @@ function SuccessContent() {
                       <p className="text-sm text-gray-500 mb-1">Bestellnummer</p>
                       <p className="font-mono text-lg font-semibold">#{order.id.substring(0, 8).toUpperCase()}</p>
                     </div>
-                    
+
                     <div>
                       <p className="text-sm text-gray-500 mb-1">Status</p>
                       <p className="text-lg font-medium">{getStatusText(order.status)}</p>
                     </div>
-                    
+
                     <div>
                       <p className="text-sm text-gray-500 mb-1">Bestelldatum</p>
                       <p className="text-lg">{formatDate(order.created_at)}</p>
                     </div>
-                    
+
                     {order.paid_at && (
                       <div>
                         <p className="text-sm text-gray-500 mb-1">Bezahlt am</p>
                         <p className="text-lg">{formatDate(order.paid_at)}</p>
                       </div>
                     )}
-                    
+
                     <div>
                       <p className="text-sm text-gray-500 mb-1">Gesamtbetrag</p>
                       <p className="text-3xl font-serif">{formatPrice(order.amount_cents, order.currency)}</p>
@@ -272,9 +273,8 @@ function SuccessContent() {
                   {/* Step 3: Production */}
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        order.gelato_order_id ? "bg-blue-100" : "bg-gray-100"
-                      }`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${order.gelato_order_id ? "bg-blue-100" : "bg-gray-100"
+                        }`}>
                         {order.gelato_order_id ? (
                           <CheckCircle2 className="w-5 h-5 text-blue-600" />
                         ) : (

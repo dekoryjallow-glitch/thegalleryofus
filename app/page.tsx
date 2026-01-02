@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CheckoutButton from '@/components/CheckoutButton';
 import { createClient } from '@/lib/supabase/server';
+import { Logo } from '@/components/Logo';
 import { UserMenu } from '@/components/UserMenu';
 
 export default async function Home() {
@@ -14,10 +15,9 @@ export default async function Home() {
     <main className="min-h-screen bg-cream-50 flex flex-col selection:bg-terracotta-500/30 selection:text-terracotta-900 overflow-x-hidden">
       {/* Navigation / Header */}
       <header className="w-full py-4 px-6 md:px-12 flex justify-between items-center bg-cream-50/90 backdrop-blur-md fixed top-0 z-50 border-b border-cream-200/40 transition-all duration-300">
-        <div className="font-serif text-xl md:text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-          <span className="w-8 h-8 bg-terracotta-500 rounded-full flex items-center justify-center text-white text-sm font-serif italic">G</span>
-          <span className="hidden xs:inline">The Gallery Of Us</span>
-        </div>
+        <Link href="/" className="transition-opacity hover:opacity-80">
+          <Logo className="h-8 md:h-10 w-auto" />
+        </Link>
 
         <nav className="hidden lg:flex gap-10 text-[11px] font-bold tracking-[0.2em] text-gray-500 uppercase">
           <a href="#how-it-works" className="hover:text-terracotta-500 transition-colors">So funktioniert&apos;s</a>
@@ -64,7 +64,7 @@ export default async function Home() {
             </div>
 
             <p className="text-lg md:text-xl text-gray-500 max-w-lg mx-auto lg:mx-0 font-light leading-relaxed">
-              Erlebe die Magie der Verbundenheit. Unsere KI verwandelt eure gemeinsamen Momente in
+              Erlebe die Magie der Verbundenheit. Unsere <span className="text-gray-900 font-medium italic">Design-Manufaktur</span> verwandelt eure gemeinsamen Momente in
               <span className="text-gray-900 font-medium italic"> zeitlose One-Line-Meisterwerke</span> –
               perfekt kuratiert für dein Zuhause.
             </p>
@@ -99,27 +99,79 @@ export default async function Home() {
           </div>
 
           {/* Hero Image - Top on Mobile, Right on Desktop */}
+          {/* Hero Image - Top on Mobile, Right on Desktop */}
           <div className="w-full lg:w-1/2 relative flex items-center justify-center lg:justify-end order-1 lg:order-2 px-4 md:px-0">
-            <div className="relative z-20 w-full max-w-sm md:max-w-md gallery-frame animate-float shadow-2xl">
-              <div className="relative w-full aspect-[3/4] bg-white overflow-hidden p-6 md:p-12 border-[16px] md:border-[24px] border-white shadow-inner">
-                <Image
-                  src="/hero-gallery.jpg"
-                  alt="Gallery of Us Hero"
-                  width={800}
-                  height={1000}
-                  className="w-full h-full object-contain transition-transform duration-1000 hover:scale-105"
-                  priority
-                />
+            {/* Visual Transformation Container */}
+            <div className="relative z-20 w-full max-w-xl mx-auto lg:mr-0 flex items-center justify-center">
+
+              {/* Input: Selfies (Floating LEFT of the main frame) */}
+              <div className="absolute -left-4 lg:-left-12 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3 md:gap-6 pointer-events-none">
+                {/* Selfie 1 (Female) */}
+                <div className="relative w-24 md:w-32 aspect-[4/5] bg-white p-2 shadow-xl transform -rotate-6 transition-transform hover:-rotate-3 duration-500 animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
+                  <div className="relative w-full h-full overflow-hidden bg-gray-100 ring-1 ring-black/5">
+                    <Image
+                      src="/hero-selfie-female.jpg"
+                      alt="Source Selfie 1"
+                      fill
+                      className="object-cover filter grayscale contrast-125"
+                    />
+                  </div>
+                </div>
+
+                {/* Selfie 2 (Male) */}
+                <div className="relative w-24 md:w-32 aspect-[4/5] bg-white p-2 shadow-xl transform rotate-3 translate-x-4 md:translate-x-8 transition-transform hover:rotate-6 duration-500 animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
+                  <div className="relative w-full h-full overflow-hidden bg-gray-100 ring-1 ring-black/5">
+                    <Image
+                      src="/hero-selfie-male.jpg"
+                      alt="Source Selfie 2"
+                      fill
+                      className="object-cover filter grayscale contrast-125"
+                    />
+                  </div>
+                </div>
               </div>
-              {/* Floating Badge */}
-              <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-left-8 bg-white p-4 md:p-8 shadow-2xl max-w-[160px] md:max-w-[220px] border-l-4 border-terracotta-500 text-left">
-                <p className="font-serif text-xl md:text-2xl text-terracotta-500 mb-1 md:mb-2 leading-tight">2026 Edition</p>
-                <p className="text-[9px] md:text-[11px] text-gray-400 leading-relaxed font-medium uppercase tracking-wider">Handkuratiert. KI-gezeichnet. Ein Unikat für die Ewigkeit.</p>
+
+              {/* Connector: Visual Flow Line */}
+              <svg className="absolute left-16 md:left-24 top-1/2 -translate-y-1/2 z-20 w-32 md:w-48 h-24 pointer-events-none opacity-60 hidden sm:block" viewBox="0 0 100 50">
+                <path
+                  d="M0,25 C30,25 30,25 100,25"
+                  fill="none"
+                  stroke="url(#gradient)"
+                  strokeWidth="2"
+                  strokeDasharray="4 4"
+                  className="animate-pulse"
+                />
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="transparent" />
+                    <stop offset="50%" stopColor="#D4A373" />
+                    <stop offset="100%" stopColor="#D4A373" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* Output: Main Art Frame */}
+              <div className="relative z-10 w-full max-w-xs md:max-w-sm lg:max-w-md gallery-frame animate-float shadow-2xl ml-16 md:ml-32">
+                <div className="relative w-full aspect-[3/4] bg-white overflow-hidden p-6 md:p-8 border-[12px] md:border-[16px] border-white shadow-inner">
+                  <Image
+                    src="/hero-result-art.jpg"
+                    alt="Gallery of Us Hero Result"
+                    width={800}
+                    height={1000}
+                    className="w-full h-full object-contain transition-transform duration-1000 hover:scale-105"
+                    priority
+                  />
+                </div>
+                {/* Floating Badge */}
+                <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-left-8 bg-white p-4 md:p-6 shadow-2xl max-w-[140px] md:max-w-[180px] border-l-4 border-terracotta-500 text-left animate-fade-in opacity-0" style={{ animationDelay: '0.8s' }}>
+                  <p className="font-serif text-lg md:text-xl text-terracotta-500 mb-1 leading-tight">Das Ergebnis</p>
+                  <p className="text-[9px] md:text-[10px] text-gray-400 leading-relaxed font-medium uppercase tracking-wider">Handkuratiert. Künstlerisch vollendet. Ein Unikat für die Ewigkeit.</p>
+                </div>
               </div>
             </div>
 
             {/* Background Decorative Frame */}
-            <div className="absolute -top-4 -right-4 w-full max-w-sm md:max-w-md aspect-[3/4] border border-gold-400/20 z-10 hidden md:block transform translate-x-8 translate-y-8"></div>
+            <div className="absolute -top-4 -right-4 w-full max-w-xs md:max-w-md aspect-[3/4] border border-gold-400/20 z-10 hidden md:block transform translate-x-8 translate-y-8 pointer-events-none"></div>
           </div>
         </div>
       </section>
@@ -140,7 +192,7 @@ export default async function Home() {
                 <span className="font-serif text-2xl font-bold">1</span>
               </div>
               <h3 className="font-serif text-2xl font-bold text-gray-900 transition-colors group-hover:text-terracotta-500">Fotos wählen</h3>
-              <p className="text-gray-500 leading-relaxed">Lade zwei Porträts von dir und deinem Lieblingsmenschen hoch. Unsere KI erkennt eure markantesten Merkmale.</p>
+              <p className="text-gray-500 leading-relaxed">Lade zwei Porträts von dir und deinem Lieblingsmenschen hoch. Unser Kreativteam erfasst die Essenz eurer Verbindung.</p>
             </div>
 
             {/* Step 2 */}
@@ -148,8 +200,8 @@ export default async function Home() {
               <div className="w-16 h-16 bg-cream-50 rounded-full flex items-center justify-center mx-auto border border-cream-100 group-hover:bg-terracotta-500 group-hover:text-white transition-all duration-300">
                 <span className="font-serif text-2xl font-bold">2</span>
               </div>
-              <h3 className="font-serif text-2xl font-bold text-gray-900 transition-colors group-hover:text-terracotta-500">KI-Magie</h3>
-              <p className="text-gray-500 leading-relaxed">Innerhalb von Sekunden berechnet unser Algorithmus eine fließende, endlose Linie, die eure Gesichter zu einem harmonischen Ganzen verschmilzt.</p>
+              <h3 className="font-serif text-2xl font-bold text-gray-900 transition-colors group-hover:text-terracotta-500">Künstlerische Veredelung</h3>
+              <p className="text-gray-500 leading-relaxed">In einem fein abgestimmten Prozess entsteht eine fließende, endlose Linie, die eure Gesichter zu einem harmonischen Ganzen verschmilzt.</p>
             </div>
 
             {/* Step 3 */}
@@ -177,25 +229,41 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {/* Example Artwork Cards */}
-            <div className="group overflow-hidden rounded-sm shadow-xl bg-white p-4 transition-transform hover:-translate-y-2">
-              <div className="aspect-[4/5] bg-cream-50 relative overflow-hidden mb-4">
-                <Image src="/hero-gallery.jpg" alt="Inspiration 1" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-              </div>
-              <p className="font-serif text-center italic text-gray-800">&quot;The Connection&quot;</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 auto-rows-[300px] md:auto-rows-[400px]">
+            {/* Main Feature - Large Left (Couple at Table) */}
+            <div className="lg:col-span-8 row-span-1 md:row-span-2 relative group overflow-hidden rounded-sm shadow-2xl">
+              <Image
+                src="/inspiration-couple-table.jpg"
+                alt="Authentische Momente zuhause"
+                fill
+                className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 66vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
-            <div className="group overflow-hidden rounded-sm shadow-xl bg-white p-4 transition-transform hover:-translate-y-2 lg:mt-12">
-              <div className="aspect-[4/5] bg-cream-50 relative overflow-hidden mb-4">
-                <Image src="/hero-gallery.jpg" alt="Inspiration 2" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-              </div>
-              <p className="font-serif text-center italic text-gray-800">&quot;Shared Path&quot;</p>
+
+            {/* Secondary Feature - Top Right (Family) */}
+            <div className="lg:col-span-4 relative group overflow-hidden rounded-sm shadow-xl">
+              <Image
+                src="/inspiration-family-wall.jpg"
+                alt="Kunst für die ganze Familie"
+                fill
+                className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
-            <div className="group overflow-hidden rounded-sm shadow-xl bg-white p-4 transition-transform hover:-translate-y-2 lg:mt-24">
-              <div className="aspect-[4/5] bg-cream-50 relative overflow-hidden mb-4">
-                <Image src="/hero-gallery.jpg" alt="Inspiration 3" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-              </div>
-              <p className="font-serif text-center italic text-gray-800">&quot;One Soul&quot;</p>
+
+            {/* Tertiary Feature - Bottom Right (Couple Couch) */}
+            <div className="lg:col-span-4 relative group overflow-hidden rounded-sm shadow-xl">
+              <Image
+                src="/inspiration-couple-couch.jpg"
+                alt="Ein Mittelpunkt im Wohnzimmer"
+                fill
+                className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </div>
         </div>
@@ -203,41 +271,61 @@ export default async function Home() {
 
       {/* Quality Section */}
       <section id="quality" className="py-24 bg-white border-y border-cream-200/50">
-        <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
-          <div className="lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl">
-            <div className="relative aspect-video lg:aspect-square">
-              <Image src="/hero-gallery.jpg" alt="Printing Detail" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gray-900/10"></div>
+        <div className="container mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900">Die Essenz des Handwerks</h2>
+            <div className="w-20 h-1 bg-terracotta-500 mx-auto rounded-full"></div>
+            <p className="text-gray-500 font-light text-lg italic">In unserer Manufaktur verschmelzen zeitlose Materialien mit moderner Präzision zu einem Werk, das Generationen überdauert.</p>
+          </div>
+
+          <div className="space-y-24 md:space-y-32">
+            {/* Paper Detail */}
+            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+              <div className="w-full lg:w-1/2">
+                <div className="relative aspect-[4/3] rounded-sm overflow-hidden shadow-2xl group">
+                  <Image
+                    src="/quality-paper.jpg"
+                    alt="Detailaufnahme des 200g Museumspapiers"
+                    fill
+                    className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/5"></div>
+                </div>
+              </div>
+              <div className="w-full lg:w-1/2 space-y-6">
+                <span className="text-terracotta-600 font-serif italic text-xl">Haptik & Beständigkeit</span>
+                <h3 className="font-serif text-3xl md:text-4xl font-bold text-gray-900">Ein Relief der <br />Ewigkeit</h3>
+                <p className="text-gray-500 text-lg leading-relaxed font-light">
+                  Unser schweres Museumspapier ist mehr als nur ein Träger – es ist Teil des Kunstwerks. Mit seiner feinen, haptischen Textur und der reinweißen, säurefreien Beschaffenheit bewahrt es die Tiefe jeder Linie über Jahrzehnte hinweg. Lichtecht, haptisch erlebbar und von zeitloser Eleganz.
+                </p>
+              </div>
+            </div>
+
+            {/* Frame Detail */}
+            <div className="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-20">
+              <div className="w-full lg:w-1/2">
+                <div className="relative aspect-[4/3] rounded-sm overflow-hidden shadow-2xl group">
+                  <Image
+                    src="/quality-frame.jpg"
+                    alt="Detailaufnahme des handgefertigten Holzrahmens"
+                    fill
+                    className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/5"></div>
+                </div>
+              </div>
+              <div className="w-full lg:w-1/2 space-y-6 lg:text-right">
+                <span className="text-terracotta-600 font-serif italic text-xl">Meisterhand & Material</span>
+                <h3 className="font-serif text-3xl md:text-4xl font-bold text-gray-900">Rahmen aus <br />Meisterhand</h3>
+                <p className="text-gray-500 text-lg leading-relaxed font-light">
+                  Echtes Massivholz, tiefschwarz lasiert. Unsere Rahmen werden in lokaler Handarbeit gefertigt und bestechen durch ihre sichtbare Maserung und handwerkliche Präzision. Sie geben eurer Geschichte den Raum, den sie verdient – stabil, edel und vollkommen im Detail.
+                </p>
+              </div>
             </div>
           </div>
-          <div className="lg:w-1/2 space-y-10">
-            <div className="space-y-4">
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 leading-tight">Handgefertigt. <br />Handverlesen.</h2>
-              <p className="text-gray-500 font-light text-lg">Wir glauben, dass Kunst Bestand haben muss. Deshalb machen wir keine Kompromisse bei der Auswahl unserer Materialien.</p>
-            </div>
 
-            <div className="space-y-8">
-              <div className="flex gap-6">
-                <div className="shrink-0 w-12 h-12 bg-gold-400/10 rounded-full flex items-center justify-center text-gold-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-                <div>
-                  <h4 className="font-serif text-xl font-bold mb-2">Papiere mit Charakter</h4>
-                  <p className="text-gray-500 text-sm">Schweres 200g Museums-Papier mit feiner Textur, säurefrei und lichtbeständig für Jahrzehnte.</p>
-                </div>
-              </div>
-              <div className="flex gap-6">
-                <div className="shrink-0 w-12 h-12 bg-gold-400/10 rounded-full flex items-center justify-center text-gold-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
-                </div>
-                <div>
-                  <h4 className="font-serif text-xl font-bold mb-2">Echtholz-Rahmung</h4>
-                  <p className="text-gray-500 text-sm">Unsere Rahmen werden in lokaler Handarbeit aus nachhaltigem Massivholz (Eiche, Esche, Kiefer) gefertigt.</p>
-                </div>
-              </div>
-            </div>
-
-            <Button href="/create" variant="primary" className="bg-gray-900 border-none hover:bg-black text-white px-10 rounded-full">
+          <div className="mt-24 text-center">
+            <Button href="/create" variant="primary" className="bg-gray-900 border-none hover:bg-black text-white px-12 py-4 text-lg rounded-full shadow-xl transition-all hover:scale-105">
               Qualität erleben
             </Button>
           </div>
@@ -248,15 +336,16 @@ export default async function Home() {
       <section className="py-24 bg-cream-50">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="font-serif text-4xl font-bold">Häufige Fragen</h2>
-            <p className="text-gray-500">Alles, was du über dDeine Bestellung wissen musst.</p>
+            <h2 className="font-serif text-4xl font-bold">Wissenswertes zu deinem Unikat</h2>
+            <p className="text-gray-500">Alles, was du über deine Bestellung in unserer Manufaktur wissen musst.</p>
           </div>
 
           <div className="space-y-6">
             {[
-              { q: "Wie lange dauert der Versand?", a: "Innerhalb der EU liefern wir in der Regel in 3-5 Werktagen. Jedes Bild wird nach deiner Bestellung individuell gedruckt und gerahmt." },
-              { q: "Welche Fotos eignen sich am besten?", a: "Klare Porträtaufnahmen mit frontalem Gesicht funktionieren am besten. Aber keine Sorge: Unsere KI kommt mit fast jedem Foto zurecht." },
-              { q: "Kann ich das Bild vor dem Druck sehen?", a: "Absolut! Du erstellst dein Kunstwerk in unserer Vorschau und gibst es erst dann in den Druck, wenn du zu 100% zufrieden bist." },
+              { q: "Welche Motive eignen sich für mein Kunstwerk?", a: "Am schönsten wirken klare Porträtaufnahmen, die den Charakter eurer Gesichter gut einfangen. Doch hab keine Sorge um die Qualität: Unsere Manufaktur ist darauf spezialisiert, auch aus einfachen Schnappschüssen die verborgene Harmonie herauszuarbeiten." },
+              { q: "Habe ich die volle Kontrolle über das Ergebnis?", a: "Selbstverständlich. Du begleitest den Entstehungsprozess in unserer digitalen Vorschau. Erst wenn die Linienführung dein Herz berührt und du zu 100% zufrieden bist, geben wir dein Werk in den Druck." },
+              { q: "In welcher Zeit erreicht mich mein Kunstwerk?", a: "Qualität braucht einen Moment der Ruhe, aber keine Ewigkeit. Innerhalb der EU erreicht dich dein individuell gefertigtes Werk in der Regel nach 3 bis 5 Werktagen – sicher verpackt und bereit für seinen Platz an deiner Wand." },
+              { q: "Was macht die Qualität der Gallery Of Us aus?", a: "Wir verwenden ausschließlich schweres 200g Museums-Papier und Rahmen aus nachhaltigem Massivholz. Jedes Stück wird in lokaler Handarbeit vollendet, um die Tiefe eurer Verbindung auch haptisch spürbar zu machen." },
             ].map((faq, i) => (
               <div key={i} className="bg-white p-8 rounded-lg shadow-sm border border-cream-200/50">
                 <h4 className="font-serif text-lg font-bold mb-3">{faq.q}</h4>
@@ -272,11 +361,10 @@ export default async function Home() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16">
             <div className="col-span-1 md:col-span-1 space-y-6">
-              <div className="font-serif text-2xl font-bold tracking-tight flex items-center gap-2">
-                <span className="w-8 h-8 bg-terracotta-500 rounded-full flex items-center justify-center text-white text-sm font-serif italic">G</span>
-                The Gallery Of Us
-              </div>
-              <p className="text-gray-400 text-sm leading-relaxed">Merging human emotion with AI precision. Hand-crafted for the modern minimalist gallery.</p>
+              <Link href="/" className="transition-opacity hover:opacity-80 inline-block mb-4">
+                <Logo className="h-10 w-auto" variant="light" />
+              </Link>
+              <p className="text-gray-400 text-sm leading-relaxed">Merging human emotion with artistic precision. Hand-crafted for the modern minimalist gallery.</p>
             </div>
 
             <div className="space-y-6">
@@ -307,7 +395,7 @@ export default async function Home() {
           </div>
 
           <div className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-gray-500 text-[10px] uppercase tracking-widest">&copy; 2026 The Gallery Of Us. AI & Print Excellence.</p>
+            <p className="text-gray-500 text-[10px] uppercase tracking-widest">&copy; 2026 The Gallery Of Us. Art & Print Excellence.</p>
             <div className="flex gap-6 grayscale opacity-30">
               <span className="text-[10px] font-bold tracking-tighter">STRIPE</span>
               <span className="text-[10px] font-bold tracking-tighter">GELATO</span>

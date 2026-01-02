@@ -190,7 +190,7 @@ CREATE TABLE orders (
   
   -- Order Details
   status order_status DEFAULT 'pending',
-  amount_cents INT NOT NULL, -- In Cent (z.B. 4900 = 49,00€)
+  amount_cents INT NOT NULL, -- In Cent (z.B. 7490 = 74,90€)
   currency TEXT DEFAULT 'EUR',
   
   -- Shipping (optional, wenn du Print-on-Demand nutzt)
@@ -465,7 +465,7 @@ export async function POST(req: NextRequest) {
     .insert({
       user_id: user.id,
       generation_id: generationId,
-      amount_cents: 4900, // 49€
+      amount_cents: 7490, // 74,90€
       currency: 'EUR',
       status: 'pending'
     })
@@ -482,7 +482,7 @@ export async function POST(req: NextRequest) {
           name: 'Personalized Line Art Print',
           images: [generation.result_url],
         },
-        unit_amount: 4900,
+        unit_amount: 7490,
       },
       quantity: 1,
     }],
