@@ -148,15 +148,15 @@ export default function OrderDetailClient({ order }: OrderDetailClientProps) {
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">Manual Fulfillment Guide</h2>
                             <ol className="list-decimal list-inside space-y-3 text-gray-600 text-sm">
-                                <li>Download the "Print Asset" image above.</li>
+                                <li>Download the &quot;Print Asset&quot; image above.</li>
                                 <li>Log in to <a href="https://gelato.com" target="_blank" className="text-indigo-600 hover:underline">Gelato Dashboard</a>.</li>
-                                <li>Create a new "Manual Order".</li>
-                                <li>Select Product: <strong>Framed Poster (16x16" / 40x40cm)</strong>.</li>
+                                <li>Create a new &quot;Manual Order&quot;.</li>
+                                <li>Select Product: <strong>Framed Poster (16x16&quot; / 40x40cm)</strong>.</li>
                                 <li>Upload the downloaded image. Ensure 1:1 aspect ratio matches.</li>
                                 <li>Enter the Shipping Details (see right panel).</li>
                                 <li>Submit Order in Gelato.</li>
                                 <li>Copy the Gelato Order ID and paste it below.</li>
-                                <li>Mark this order as "Fulfilled".</li>
+                                <li>Mark this order as &quot;Fulfilled&quot;.</li>
                             </ol>
 
                             <div className="mt-6 pt-6 border-t border-gray-100">
