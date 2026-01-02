@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CheckoutButton from '@/components/CheckoutButton';
 import { createClient } from '@/lib/supabase/server';
+import { UserMenu } from '@/components/UserMenu';
 
 export default async function Home() {
   const supabase = await createClient();
@@ -35,9 +36,7 @@ export default async function Home() {
               Login
             </Link>
           ) : (
-            <Link href="/orders" className="text-[10px] md:text-[11px] font-bold tracking-[0.2em] text-gray-500 uppercase hover:text-terracotta-500 transition-colors">
-              Bestellungen
-            </Link>
+            <UserMenu />
           )}
           <Button href="/create" variant="primary" className="bg-terracotta-500 hover:bg-terracotta-600 text-white !px-5 md:!px-8 !py-2 md:!py-3 text-[10px] md:text-[11px] uppercase tracking-widest font-bold rounded-full">
             Erstellen
