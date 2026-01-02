@@ -98,6 +98,32 @@ export async function POST(req: Request) {
 
             console.log("[Stripe Webhook] Order updated to paid status. Ready for manual fulfillment.");
 
+            // 4. Versende Bestätigungs-E-Mail
+            try {
+                console.log("[Stripe Webhook] Sending summary notification to customer:", session.customer_details?.email);
+                const { resend } = await import("@/lib/resend");
+                const { OrderConfirmationEmail } = await import("@/lib/emails/templates/OrderConfirmation");
+
+                // Wir brauchen ein Image für die Mail. Wir nehmen das result_url aus dem Joint (wir haben die order ID).
+                // Da wir die order schon geladen haben, schauen wir ob image_url dabei ist.
+                const artworkUrl = order.image_url || "https://thegalleryofus.com/logo.png"; // Fallback
+
+                await resend.emails.send({
+                    from: 'The Gallery of Us <shop@thegalleryofus.com>',
+                    to: session.customer_details?.email || "",
+                    subject: `Deine Kunst wird nun lebendig – Bestellung #${order.id.substring(0, 8)}`,
+                    react: OrderConfirmationEmail({
+                        customerName: shippingName,
+                        orderNumber: `#${order.id.substring(0, 8)}`,
+                        imageUrl: artworkUrl,
+                    }),
+                });
+                console.log("[Stripe Webhook] ✅ Order confirmation email sent.");
+            } catch (emailError) {
+                // Wir loggen den Fehler, aber schmeißen ihn nicht, damit die Order als 'paid' markiert bleibt
+                console.error("[Stripe Webhook] ❌ Failed to send confirmation email:", emailError);
+            }
+
         } catch (error: any) {
             console.error("[Stripe Webhook] Error processing checkout.session.completed:", error);
             return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

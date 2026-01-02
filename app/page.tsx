@@ -36,7 +36,7 @@ export default async function Home() {
               Login
             </Link>
           ) : (
-            <UserMenu />
+            <UserMenu initialUser={user} />
           )}
           <Button href="/create" variant="primary" className="bg-terracotta-500 hover:bg-terracotta-600 text-white !px-5 md:!px-8 !py-2 md:!py-3 text-[10px] md:text-[11px] uppercase tracking-widest font-bold rounded-full">
             Erstellen

@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Check, ExternalLink, Search, Filter } from "lucide-react";
+import { Copy, Check, ExternalLink, Search, Filter, Truck, X } from "lucide-react";
 import { useState } from "react";
 
 interface ShippingAddress {
@@ -32,6 +32,10 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [copiedField, setCopiedField] = useState<string | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [trackingUrl, setTrackingUrl] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const filteredOrders = orders.filter((order) => {
         const matchesSearch =
@@ -55,6 +59,41 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
             style: "currency",
             currency: "EUR",
         }).format(cents / 100);
+    };
+
+    const handleShipOrder = async () => {
+        if (!selectedOrder || !trackingNumber) return;
+
+        setIsSubmitting(true);
+        try {
+            const response = await fetch("/api/admin/orders/ship", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    orderId: selectedOrder.id,
+                    trackingNumber,
+                    trackingUrl,
+                }),
+            });
+
+            if (!response.ok) throw new Error("Failed to ship order");
+
+            // Update local state
+            setOrders(orders.map(o =>
+                o.id === selectedOrder.id
+                    ? { ...o, status: "fulfilled" }
+                    : o
+            ));
+
+            setSelectedOrder(null);
+            setTrackingNumber("");
+            setTrackingUrl("");
+        } catch (error) {
+            console.error(error);
+            alert("Fehler beim Versenden der Bestellung.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -176,6 +215,15 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
                                                     Gelato UID
                                                 </button>
                                             )}
+                                            {order.status === "paid" && (
+                                                <button
+                                                    onClick={() => setSelectedOrder(order)}
+                                                    className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium bg-terracotta-500 text-white hover:bg-terracotta-600 transition-all"
+                                                >
+                                                    <Truck className="w-3 h-3" />
+                                                    Versenden
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>
@@ -189,6 +237,64 @@ export default function OrderManagementClient({ initialOrders }: { initialOrders
                     </table>
                 </div>
             </div>
+
+            {/* Tracking Modal */}
+            {selectedOrder && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-xl max-width-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                            <h3 className="font-serif font-bold text-lg text-gray-900">Versand bestätigen</h3>
+                            <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-gray-600 p-1">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                                    Sendungsnummer *
+                                </label>
+                                <input
+                                    type="text"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500"
+                                    placeholder="z.B. 00340434... (DHL)"
+                                    value={trackingNumber}
+                                    onChange={(e) => setTrackingNumber(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                                    Tracking-URL (optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500"
+                                    placeholder="https://www.dhl.de/..."
+                                    value={trackingUrl}
+                                    onChange={(e) => setTrackingUrl(e.target.value)}
+                                />
+                            </div>
+                            <p className="text-[10px] text-gray-400 leading-relaxed italic">
+                                Beim Bestätigen wird der Status auf "Abgeschlossen" gesetzt und der Kunde erhält automatisch eine Versandbestätigung per E-Mail.
+                            </p>
+                        </div>
+                        <div className="px-6 py-4 bg-gray-50 flex gap-3">
+                            <button
+                                onClick={() => setSelectedOrder(null)}
+                                className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-white transition-colors"
+                            >
+                                Abbrechen
+                            </button>
+                            <button
+                                onClick={handleShipOrder}
+                                disabled={!trackingNumber || isSubmitting}
+                                className="flex-1 px-4 py-2 bg-terracotta-500 text-white rounded-lg text-sm font-medium hover:bg-terracotta-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                            >
+                                {isSubmitting ? "Wird gesendet..." : "Jetzt versenden"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

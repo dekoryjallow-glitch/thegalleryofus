@@ -6,8 +6,8 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export function UserMenu() {
-    const [user, setUser] = useState<any>(null);
+export function UserMenu({ initialUser = null }: { initialUser?: any }) {
+    const [user, setUser] = useState<any>(initialUser);
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const [supabase] = useState(() => createClient());
@@ -18,6 +18,8 @@ export function UserMenu() {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
         };
+
+        // Fetch to keep it fresh
         fetchUser();
 
         const handleClickOutside = (event: MouseEvent) => {
@@ -28,7 +30,7 @@ export function UserMenu() {
 
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [supabase, router]);
+    }, [supabase]); // Removed router from dependencies
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -41,16 +43,18 @@ export function UserMenu() {
     return (
         <div className="relative" ref={menuRef}>
             <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 p-1 hover:bg-gray-100 rounded-full transition-all border border-transparent hover:border-gray-200"
+                type="button"
+                onMouseDown={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(!isOpen);
+                }}
+                className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center font-bold text-sm hover:scale-105 transition-all border border-gray-200/10 shadow-sm"
             >
-                <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center font-bold text-sm">
-                    {user.email?.charAt(0).toUpperCase()}
-                </div>
+                {user.email?.charAt(0).toUpperCase()}
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden z-50 animate-fade-in origin-top-right">
+                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden z-50 animate-dropdown origin-top-right">
                     <div className="p-4 border-b border-gray-100 bg-gray-50/50">
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Eingeloggt als</p>
                         <p className="text-sm font-semibold truncate text-gray-900">{user.email}</p>
