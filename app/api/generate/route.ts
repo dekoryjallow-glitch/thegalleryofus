@@ -105,7 +105,7 @@ Create a minimalist black-and-white stencil portrait of TWO FACES positioned int
 - The heads create a unified, balanced composition suggesting connection and intimacy
 
 SPATIAL LAYOUT:
-- Aspect Ratio: 1:1 square (1024x1024)
+- Aspect Ratio: 1:1 square (1024x1024 pixels = 40x40cm print size)
 - Light beige/cream background (#F5F5DC or #E8E4D8) – CLEAN and MINIMAL
 - Both faces positioned HEAD-TO-HEAD in the center of the canvas
 - Close-up framing: Focus on faces only (from top of head to upper neck/shoulder suggestion). No full bodies.
@@ -147,16 +147,25 @@ LINE & TEXTURE (CRITICAL – Defines the Banksy look):
 - Add subtle GRADIENT FADE at hair edges and outer contours (spray dissipating into air)
 - The smile should be captured through subtle line curvature – minimal but clear
 
-SPRAY EFFECTS (Essential for authenticity – BUT KEEP BACKGROUND CLEAN):
-- Moderate overspray haze around face edges ONLY (hair, jawline, shoulders) – not scattered across background
-- MINIMAL black dots: 3-5 small dots placed close to the faces, NOT scattered across the entire background
-- Subtle spray mist connecting the two faces (like shared atmosphere) – keep within the face area
-- DRIPS: 2-4 vertical paint drips falling from organic points (hair tips, chin, eyebrows) – keep them subtle and attached to the faces, not random background drips
-- IMPORTANT: Keep the background CLEAN – spray effects should be concentrated around the faces, not filling the entire canvas
+FACIAL SKIN AREA (CRITICAL – Keep Clean):
+- The FACIAL SKIN (cheeks, forehead, chin, nose area) must be CLEAN WHITE/BEIGE
+- NO color washes, NO gradient fills, NO spray texture INSIDE the face
+- Face contours are defined by BLACK LINES ONLY – the interior stays clean background color
+- Think: Stencil cut-out where the face shape is negative space, not filled with texture
+- AVOID: Muddy grey washes, gradient shading, or "watercolor-like" effects on skin
+- The face should have CRISP contrast: black outlines + clean light background inside
+
+SPRAY EFFECTS (Essential for authenticity – BUT KEEP FACES CLEAN):
+- Moderate overspray haze AROUND face edges ONLY (hair, jawline, shoulders, outer perimeter)
+- NO SPRAY TEXTURE INSIDE THE FACIAL AREA (cheeks, forehead, chin, nose) – keep skin clean
+- MINIMAL black dots: 3-5 small dots placed close to the faces but NOT on the face itself
+- Subtle spray mist connecting the two faces OUTSIDE the face contours (like shared atmosphere)
+- DRIPS: 2-4 vertical paint drips falling from organic points (hair tips, chin LINE, eyebrows) – drips should come FROM lines, not appear as random gradient washes
+- IMPORTANT: Keep the background CLEAN and face interiors CLEAN – spray effects concentrated around hair, shoulders, outer edges only
 
 BACKGROUND CLEANLINESS (CRITICAL):
 - The beige/cream background should be MOSTLY CLEAN with minimal texture
-- Spray effects (dots, splatter, mist) should be concentrated AROUND THE FACES ONLY
+- Spray effects (dots, splatter, mist) should be concentrated AROUND THE FACES ONLY, not inside them
 - Avoid scattered random dots or splatter across the empty background areas
 - The focus should be on the faces with clean negative space surrounding them
 - Think: "Gallery-ready clean canvas with focused spray art subject"
@@ -164,7 +173,9 @@ BACKGROUND CLEANLINESS (CRITICAL):
 COLOR:
 - Pure black and white only
 - NO color accents (keep the raw streetart authenticity)
+- NO grey gradient washes or color bleeds in facial areas
 - Background: Light beige/cream (#F5F5DC or #E8E4D8) – CLEAN and MINIMAL
+- Face interiors: Same clean background color (no fills, no washes)
 
 POSITIONING DETAILS:
 - The two faces feel naturally positioned, as if captured mid-moment
@@ -188,16 +199,24 @@ CRITICAL EXCLUSIONS:
 - NO wide smiles or grins – keep it subtle and natural
 - NO teeth showing – lips stay together with gentle upward curve
 - NO exaggerated expressions – everything stays soft and authentic
+- NO COLOR GRADIENTS OR WASHES IN FACIAL AREAS (cheeks, chin, forehead, nose)
+- NO muddy grey fills inside face contours
+- NO watercolor-like bleeding effects on skin
+- NO spray texture inside the face – only around it
 - NO vertical split down the middle (these are two separate positioned heads, not a split-face)
 - NO mockups, frames, canvas textures, or wall backgrounds
-- NO realistic shading or gradients (only spray paint density variations)
-- NO grey tones except as spray overspray effect (base is pure black + beige background)
+- NO realistic shading or gradients (only spray paint density variations OUTSIDE faces)
+- NO grey tones except as spray overspray effect around faces (never inside)
 - NO full bodies, torsos, or clothing details
 - NO color accents
 - NO excessive background splatter – keep background CLEAN with spray effects concentrated around faces only
 
-OUTPUT:
-Clean, flat digital file ready for professional print (PNG, 1024x1024, clean beige background with minimal texture)`
+OUTPUT SPECIFICATIONS:
+- Format: PNG (high-resolution)
+- Dimensions: 1024x1024 pixels (for 40x40cm print at 300 DPI)
+- Color mode: Black + Light Beige background
+- Clean, flat digital file ready for professional printing
+- No embedded mockup, frame, or texture overlay`
     };
 
     let prediction;
