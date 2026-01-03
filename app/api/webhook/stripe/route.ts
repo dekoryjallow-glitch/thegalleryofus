@@ -28,106 +28,152 @@ export async function POST(req: Request) {
     }
 
     // Handle the event
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object as Stripe.Checkout.Session;
-        console.log("✅ [Stripe Webhook] Payment successful for session:", session.id);
+    try {
+        const supabase = createAdminClient();
 
-        try {
-            // 1. Hole Order aus Supabase
-            console.log("[Stripe Webhook] Looking for order with stripe_checkout_id:", session.id);
-            const supabase = createAdminClient();
-            const { data: order, error: orderError } = await supabase
+        // Helper function for order finalization (Best of both worlds: Session & PaymentIntent)
+        const finalizeOrder = async (orderId: string, paymentIntentId: string) => {
+            console.log(`[Stripe Webhook] Finalizing order: ${orderId} (PI: ${paymentIntentId})`);
+
+            // 1. Get current order state
+            const { data: order, error: fetchError } = await supabase
                 .from("orders")
                 .select("*")
-                .eq("stripe_checkout_id", session.id)
+                .eq("id", orderId)
                 .single();
 
-            if (orderError || !order) {
-                console.error("[Stripe Webhook] ❌ Order not found:", {
-                    error: orderError,
-                    stripe_checkout_id: session.id
-                });
-                return NextResponse.json({ error: "Order not found" }, { status: 404 });
+            if (fetchError || !order) {
+                console.error("[Stripe Webhook] ❌ Order not found during finalization:", orderId);
+                return;
             }
 
-            console.log("[Stripe Webhook] ✅ Found order:", order.id);
-
-            // 2. Extrahiere Versandadresse
-            const shippingAddress = session.shipping_details?.address ||
-                (session.customer_details?.address as any);
-            const shippingName = session.shipping_details?.name ||
-                session.customer_details?.name ||
-                "Customer";
-
-            // 3. Update Order: status = 'paid', fulfillment_status = 'paid'
-            // MANUAL FULFILLMENT: We do NOT create a Gelato order here.
-            // We just save the payment info and address.
-
-            const paymentIntentId = typeof session.payment_intent === 'string'
-                ? session.payment_intent
-                : session.payment_intent?.id;
-
-            const updateData: any = {
-                status: "paid",
-                paid_at: new Date().toISOString(),
-                stripe_payment_intent_id: paymentIntentId || null,
-                fulfillment_status: "paid", // Ready for review
-            };
-
-            if (shippingAddress) {
-                updateData.shipping_address = {
-                    name: shippingName,
-                    addressLine1: shippingAddress.line1 || "",
-                    addressLine2: shippingAddress.line2 || "",
-                    city: shippingAddress.city || "",
-                    state: shippingAddress.state || "",
-                    zipCode: shippingAddress.postal_code || "",
-                    country: shippingAddress.country || "",
-                };
+            // 2. Only proceed if not already paid
+            if (order.status === 'paid') {
+                console.log("[Stripe Webhook] Order is already marked as paid. Skipping finalization.");
+                return;
             }
 
-            const { error: updateError } = await supabase
+            // 3. Mark as paid
+            const { data: updatedOrder, error: updateError } = await supabase
                 .from("orders")
-                .update(updateData)
-                .eq("id", order.id);
+                .update({
+                    status: "paid",
+                    paid_at: new Date().toISOString(),
+                    fulfillment_status: "paid",
+                    stripe_payment_intent_id: paymentIntentId,
+                })
+                .eq("id", orderId)
+                .select()
+                .single();
 
-            if (updateError) {
-                console.error("[Stripe Webhook] Error updating order:", updateError);
-                throw updateError; // Let Stripe retry
+            if (updateError || !updatedOrder) {
+                console.error("[Stripe Webhook] ❌ Failed to mark order as paid:", updateError);
+                return;
             }
 
-            console.log("[Stripe Webhook] Order updated to paid status. Ready for manual fulfillment.");
+            console.log("[Stripe Webhook] ✅ Order successfully marked as paid:", orderId);
 
-            // 4. Versende Bestätigungs-E-Mail
+            // 4. Send Confirmation Email
             try {
-                console.log("[Stripe Webhook] Sending summary notification to customer:", session.customer_details?.email);
+                const customerEmail = updatedOrder.shipping_address?.email;
+                console.log("[Stripe Webhook] Sending confirmation email to:", customerEmail);
+
                 const { resend } = await import("@/lib/resend");
                 const { OrderConfirmationEmail } = await import("@/lib/emails/templates/OrderConfirmation");
 
-                // Wir brauchen ein Image für die Mail. Wir nehmen das result_url aus dem Joint (wir haben die order ID).
-                // Da wir die order schon geladen haben, schauen wir ob image_url dabei ist.
-                const artworkUrl = order.image_url || "https://thegalleryofus.com/logo.png"; // Fallback
+                const artworkUrl = order.image_url || "https://thegalleryofus.com/logo.png";
 
                 await resend.emails.send({
                     from: 'The Gallery of Us <shop@thegalleryofus.com>',
-                    to: session.customer_details?.email || "",
-                    subject: `Deine Kunst wird nun lebendig – Bestellung #${order.id.substring(0, 8)}`,
+                    to: customerEmail || "",
+                    subject: 'Deine Bestellung bei The Gallery of Us',
                     react: OrderConfirmationEmail({
-                        customerName: shippingName,
                         orderNumber: `#${order.id.substring(0, 8)}`,
                         imageUrl: artworkUrl,
                     }),
                 });
-                console.log("[Stripe Webhook] ✅ Order confirmation email sent.");
+                console.log("[Stripe Webhook] ✅ Confirmation email sent.");
             } catch (emailError) {
-                // Wir loggen den Fehler, aber schmeißen ihn nicht, damit die Order als 'paid' markiert bleibt
-                console.error("[Stripe Webhook] ❌ Failed to send confirmation email:", emailError);
+                console.error("[Stripe Webhook] ❌ Email sending failed:", emailError);
+            }
+        };
+
+        switch (event.type) {
+            case "checkout.session.completed": {
+                const session = event.data.object as Stripe.Checkout.Session;
+                const orderId = session.metadata?.orderId;
+                const piId = session.payment_intent as string;
+
+                console.log("✅ [Stripe Webhook] Checkout Completed:", session.id, { orderId, piId });
+
+                if (!orderId) {
+                    console.error("[Stripe Webhook] ❌ No orderId in session metadata");
+                    break;
+                }
+
+                // First: Save address and PI ID regardless of payment status
+                const shippingAddress = session.shipping_details?.address || (session.customer_details?.address as any);
+                const shippingName = session.shipping_details?.name || session.customer_details?.name || "Customer";
+                const customerEmail = session.customer_details?.email;
+
+                const updateData: any = {
+                    stripe_payment_intent_id: piId || null,
+                };
+
+                if (shippingAddress) {
+                    updateData.shipping_address = {
+                        name: shippingName,
+                        email: customerEmail,
+                        addressLine1: shippingAddress.line1 || "",
+                        addressLine2: shippingAddress.line2 || "",
+                        city: shippingAddress.city || "",
+                        state: shippingAddress.state || "",
+                        zipCode: shippingAddress.postal_code || "",
+                        country: shippingAddress.country || "",
+                    };
+                }
+
+                await supabase.from("orders").update(updateData).eq("id", orderId);
+
+                // Second: If payment is already successful (standard for cards), finalize now!
+                if (session.payment_status === 'paid' && piId) {
+                    await finalizeOrder(orderId, piId);
+                }
+                break;
             }
 
-        } catch (error: any) {
-            console.error("[Stripe Webhook] Error processing checkout.session.completed:", error);
-            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+            case "payment_intent.succeeded": {
+                const pi = event.data.object as Stripe.PaymentIntent;
+                const orderId = pi.metadata?.orderId;
+
+                console.log("💰 [Stripe Webhook] PI Succeeded:", pi.id, { orderId });
+
+                if (orderId) {
+                    await finalizeOrder(orderId, pi.id);
+                } else {
+                    // Fallback lookup if metadata is missing (shouldn't happen with Checkout)
+                    const { data: order } = await supabase.from("orders").select("id").eq("stripe_payment_intent_id", pi.id).single();
+                    if (order) await finalizeOrder(order.id, pi.id);
+                }
+                break;
+            }
+
+            case "payment_intent.payment_failed": {
+                const pi = event.data.object as Stripe.PaymentIntent;
+                console.error("❌ [Stripe Webhook] PI Failed:", pi.id);
+                const orderId = pi.metadata?.orderId;
+                if (orderId) {
+                    await supabase.from("orders").update({ status: "failed" }).eq("id", orderId);
+                }
+                break;
+            }
+
+            default:
+                console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`);
         }
+    } catch (error: any) {
+        console.error("[Stripe Webhook] CRITICAL processing error:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
     return NextResponse.json({ received: true });

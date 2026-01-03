@@ -185,25 +185,30 @@ export async function POST(req: Request) {
         console.log("[Checkout API] Creating Stripe Session...");
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"],
+            payment_method_types: ["card", "giropay", "paypal"], // Added DACH relevant methods. Note: SEPA often needs separate activation or takes longer
             line_items: lineItems,
             mode: "payment",
-            // SHIPPING ADDRESS COLLECTION REMOVED - We collect it manually
+            // We collect email upfront in our form
             customer_email: customerEmail || user.email || undefined,
             metadata: {
                 orderId: order.id,
                 userId: user.id,
-                imageUrl: finalStorageUrl, // WICHTIG: Persistent URL in Metadata
+                imageUrl: finalStorageUrl,
                 gelatoProductUid: gelatoProductUid,
             },
             success_url: `${origin}/orders/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/preview/result?img=${encodedImageUrl}`,
+            // Optional: billing_address_collection: 'required' if needed for tax, 
+            // but we already have it from the modal. 
         });
 
         // 7. Order mit Stripe Checkout ID aktualisieren
         const { error: updateError } = await adminSupabase
             .from("orders")
-            .update({ stripe_checkout_id: session.id })
+            .update({
+                stripe_checkout_id: session.id,
+                // Ensure we don't accidentally mark as paid if already confirmed by quick webhook?
+            })
             .eq("id", order.id);
 
         if (updateError) {

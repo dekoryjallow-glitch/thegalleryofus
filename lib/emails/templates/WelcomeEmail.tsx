@@ -5,7 +5,6 @@ import {
     Heading,
     Hr,
     Html,
-    Img,
     Link,
     Preview,
     Section,
@@ -13,52 +12,32 @@ import {
 } from '@react-email/components';
 import React from 'react';
 
-interface OrderConfirmationEmailProps {
-    orderNumber: string;
-    imageUrl: string;
-}
-
-export const OrderConfirmationEmail = ({
-    orderNumber = "#GOU-12345",
-    imageUrl = "https://thegalleryofus.com/placeholder-art.jpg",
-}: OrderConfirmationEmailProps) => (
+export const WelcomeEmail = () => (
     <Html>
         <Head />
-        <Preview>Wir haben deine Bestellung erhalten und beginnen mit der Vorbereitung.</Preview>
+        <Preview>Willkommen in der Gemeinschaft von The Gallery of Us.</Preview>
         <Body style={main}>
             <Container style={container}>
                 <Section style={logoSection}>
                     <Text style={logoText}>The Gallery of Us</Text>
                 </Section>
                 <Section style={contentSection}>
-                    <Heading style={h1}>Bestellbestätigung</Heading>
+                    <Heading style={h1}>Schön, dass du da bist.</Heading>
                     <Text style={text}>
-                        Vielen Dank für dein Vertrauen. Wir haben deine Bestellung {orderNumber} erhalten.
+                        Willkommen bei The Gallery of Us. Wir freuen uns, dass du den Weg zu uns gefunden hast.
                     </Text>
                     <Text style={text}>
-                        Dein gewähltes Motiv wird nun von uns geprüft und für den hochwertigen Druck vorbereitet. Wir legen großen Wert auf Präzision, damit dein Kunstwerk in höchster Qualität bei dir ankommt.
+                        Unsere Mission ist es, persönliche Momente und tiefe Verbindungen in zeitlose Kunstwerke zu verwandeln – schlicht, ästhetisch und von bleibendem Wert.
                     </Text>
-
-                    <Section style={imageContainer}>
-                        <Img
-                            src={imageUrl}
-                            width="500"
-                            alt="Dein Kunstwerk"
-                            style={artworkImage}
-                        />
-                    </Section>
-
                     <Text style={text}>
-                        Sobald dein Kunstwerk unser Studio verlässt, senden wir dir eine Bestätigung mit allen Details zum Versand.
+                        In deiner Galerie kannst du nun beginnen, deine eigenen Erinnerungen festzuhalten. Wir begleiten dich dabei mit Ruhe und Sorgfalt.
                     </Text>
-
-                    <Link href="https://thegalleryofus.com" style={button}>
-                        Status ansehen
+                    <Link href="https://thegalleryofus.com/create" style={button}>
+                        Zur Galerie
                     </Link>
-
                     <Hr style={hr} />
                     <Text style={footer}>
-                        Solltest du Fragen zu deiner Bestellung haben, antworte einfach direkt auf diese E-Mail. Wir sind für dich da.
+                        Hinter The Gallery of Us stehen Menschen, die deine Liebe zur Kunst teilen. Solltest du Fragen haben, antworte einfach auf diese Nachricht.
                     </Text>
                 </Section>
             </Container>
@@ -66,7 +45,7 @@ export const OrderConfirmationEmail = ({
     </Html>
 );
 
-export default OrderConfirmationEmail;
+export default WelcomeEmail;
 
 const main = {
     backgroundColor: '#F9F5F0',
@@ -115,19 +94,6 @@ const text = {
     fontSize: '16px',
     lineHeight: '1.7',
     margin: '0 0 24px',
-};
-
-const imageContainer = {
-    margin: '32px 0',
-    borderRadius: '4px',
-    overflow: 'hidden',
-    border: '1px solid #EFE6DD',
-};
-
-const artworkImage = {
-    display: 'block',
-    width: '100%',
-    height: 'auto',
 };
 
 const hr = {

@@ -36,7 +36,15 @@ function LoginForm() {
 
         if (signUpError) throw signUpError;
 
-        alert("Bitte bestätige deine E-Mail-Adresse. Wir haben dir eine Bestätigungs-E-Mail gesendet.");
+        // Versuche die Willkommens-E-Mail zu senden (im Hintergrund)
+        fetch("/api/auth/welcome-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }).catch(err => console.error("Failed to trigger welcome email:", err));
+
+        alert("Willkommen! Dein Account wurde erstellt. Du kannst dich jetzt anmelden.");
+        setIsSignUp(false); // Zur Anmeldung wechseln
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,

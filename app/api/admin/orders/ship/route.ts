@@ -60,9 +60,8 @@ export async function POST(req: Request) {
             await resend.emails.send({
                 from: 'The Gallery of Us <shop@thegalleryofus.com>',
                 to: customerEmail,
-                subject: `Große Vorfreude! Deine Kunst ist unterwegs – Bestellung #${order.id.substring(0, 8)}`,
+                subject: 'Dein Kunstwerk ist unterwegs',
                 react: ShippingNotificationEmail({
-                    customerName: customerName,
                     orderNumber: `#${order.id.substring(0, 8)}`,
                     trackingNumber: trackingNumber,
                     trackingUrl: trackingUrl || "#",

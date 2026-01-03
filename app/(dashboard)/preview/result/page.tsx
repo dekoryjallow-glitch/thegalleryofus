@@ -60,7 +60,9 @@ function PreviewContent() {
         throw new Error("Keine Checkout-URL erhalten.");
       }
     } catch (error: any) {
-      alert(`Fehler: ${error.message}`);
+      console.error("[Checkout] Error:", error);
+      // Hier könnte man ein schöneres Toast-UI nutzen
+      alert(`Entschuldigung, es gab ein Problem beim Starten des Bezahlvorgangs: ${error.message}. Bitte versuche es erneut.`);
       setIsCheckingOut(false);
     }
   };
