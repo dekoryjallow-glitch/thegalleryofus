@@ -15,7 +15,7 @@ export default function AGBPage() {
 
                         <h3>1. Geltungsbereich</h3>
                         <p>
-                            Für alle Bestellungen über den Online-Shop "The Gallery of Us" (nachfolgend „Anbieter“) durch Verbraucher und Unternehmer gelten die nachfolgenden AGB.
+                            Für alle Bestellungen über den Online-Shop &quot;The Gallery of Us&quot; (nachfolgend „Anbieter“) durch Verbraucher und Unternehmer gelten die nachfolgenden AGB.
                         </p>
                         <p>
                             Verbraucher ist jede natürliche Person, die ein Rechtsgeschäft zu Zwecken abschließt, die überwiegend weder ihrer gewerblichen noch ihrer selbständigen beruflichen Tätigkeit zugerechnet werden können. Unternehmer ist eine natürliche oder juristische Person oder eine rechtsfähige Personengesellschaft, die bei Abschluss eines Rechtsgeschäfts in Ausübung ihrer gewerblichen oder selbständigen beruflichen Tätigkeit handelt.
@@ -62,7 +62,7 @@ export default function AGBPage() {
                                 Das Widerrufsrecht besteht nicht bei Verträgen zur Lieferung von Waren, die nicht vorgefertigt sind und für deren Herstellung eine individuelle Auswahl oder Bestimmung durch den Verbraucher maßgeblich ist oder die eindeutig auf die persönlichen Bedürfnisse des Verbrauchers zugeschnitten sind (§ 312g Abs. 2 Nr. 1 BGB).
                             </p>
                             <p className="mt-2 text-orange-800">
-                                Da alle Produkte von "The Gallery of Us" individuell nach Ihren Bildvorlagen angefertigt werden („Custom Art“), besteht für diese Artikel <strong>kein Widerrufsrecht</strong>.
+                                Da alle Produkte von &quot;The Gallery of Us&quot; individuell nach Ihren Bildvorlagen angefertigt werden („Custom Art“), besteht für diese Artikel <strong>kein Widerrufsrecht</strong>.
                             </p>
                         </div>
 

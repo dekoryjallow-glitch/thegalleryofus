@@ -72,7 +72,7 @@ export default function DatenschutzPage() {
 
                         <h3>6. Bildverarbeitung und KI-Dienste</h3>
                         <p>
-                            Zur Erstellung der personalisierten Kunstwerke ("Continuous Line Art") verwenden wir spezialisierte Software-Dienste für Bildverarbeitung (u.a. KI-basierte Tools).
+                            Zur Erstellung der personalisierten Kunstwerke (&quot;Continuous Line Art&quot;) verwenden wir spezialisierte Software-Dienste für Bildverarbeitung (u.a. KI-basierte Tools).
                         </p>
                         <p>
                             <strong>Verarbeitung von Fotos</strong><br />

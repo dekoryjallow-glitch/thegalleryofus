@@ -23,7 +23,7 @@ export function CookieBanner() {
                     <h4 className="font-serif text-lg font-bold text-gray-900">Deine Privatsphäre</h4>
                     <p className="text-gray-500 text-sm leading-relaxed">
                         Wir nutzen Cookies, um dir ein funktionierendes und schönes Erlebnis in unserer Galerie zu ermöglichen.
-                        Einige sind essenziell, andere helfen uns, "The Gallery of Us" besser zu verstehen.
+                        Einige sind essenziell, andere helfen uns, &quot;The Gallery of Us&quot; besser zu verstehen.
                         Du entscheidest, was wir speichern dürfen.
                         <br />
                         <Link href="/datenschutz" className="text-terracotta-600 underline underline-offset-2 hover:text-terracotta-700 mt-1 inline-block">
