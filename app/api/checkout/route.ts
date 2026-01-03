@@ -185,7 +185,7 @@ export async function POST(req: Request) {
         console.log("[Checkout API] Creating Stripe Session...");
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card", "giropay", "paypal"], // Added DACH relevant methods. Note: SEPA often needs separate activation or takes longer
+            payment_method_types: ["card", "paypal"], // Added DACH relevant methods. Note: SEPA often needs separate activation or takes longer
             line_items: lineItems,
             mode: "payment",
             // We collect email upfront in our form
