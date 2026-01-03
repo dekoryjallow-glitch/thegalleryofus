@@ -1,48 +1,15 @@
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import Link from 'next/link';
-import CheckoutButton from '@/components/CheckoutButton';
-import { createClient } from '@/lib/supabase/server';
-import { Logo } from '@/components/Logo';
-import { UserMenu } from '@/components/UserMenu';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 
 export default async function Home() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const isAdmin = user?.email === 'dekory@onvisimedia.com';
 
   return (
     <main className="min-h-screen bg-cream-50 flex flex-col selection:bg-terracotta-500/30 selection:text-terracotta-900 overflow-x-hidden">
       {/* Navigation / Header */}
-      <header className="w-full py-4 px-6 md:px-12 flex justify-between items-center bg-cream-50/90 backdrop-blur-md fixed top-0 z-50 border-b border-cream-200/40 transition-all duration-300">
-        <Link href="/" className="transition-opacity hover:opacity-80">
-          <Logo className="h-8 md:h-10 w-auto" />
-        </Link>
-
-        <nav className="hidden lg:flex gap-10 text-[11px] font-bold tracking-[0.2em] text-gray-500 uppercase">
-          <a href="#how-it-works" className="hover:text-terracotta-500 transition-colors">Der Prozess</a>
-          <a href="#gallery" className="hover:text-terracotta-500 transition-colors">Inspiration</a>
-          <a href="#quality" className="hover:text-terracotta-500 transition-colors">Manufaktur</a>
-          {isAdmin && (
-            <Link href="/admin" className="text-terracotta-600 hover:text-terracotta-700 font-bold underline decoration-2 underline-offset-4">
-              Admin
-            </Link>
-          )}
-        </nav>
-
-        <div className="flex items-center gap-3 md:gap-6">
-          {!user ? (
-            <Link href="/login" className="text-[10px] md:text-[11px] font-bold tracking-[0.2em] text-gray-500 uppercase hover:text-terracotta-500 transition-colors">
-              Login
-            </Link>
-          ) : (
-            <UserMenu initialUser={user} />
-          )}
-          <Button href="/create" variant="primary" className="bg-terracotta-500 hover:bg-terracotta-600 text-white !px-5 md:!px-8 !py-2 md:!py-3 text-[10px] md:text-[11px] uppercase tracking-widest font-bold rounded-full">
-            Erstellen
-          </Button>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section - Mobile First Stacked Layout */}
       <section className="relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-center pt-24 lg:pt-0 pb-12 lg:pb-0 overflow-hidden">
@@ -356,54 +323,7 @@ export default async function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-20">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16">
-            <div className="col-span-1 md:col-span-1 space-y-6">
-              <Link href="/" className="transition-opacity hover:opacity-80 inline-block mb-4">
-                <Logo className="h-10 w-auto" variant="light" />
-              </Link>
-              <p className="text-gray-400 text-sm leading-relaxed">Verbindung. Kunst. Gefühl. Handgefertigt für das moderne Zuhause.</p>
-            </div>
-
-            <div className="space-y-6">
-              <h5 className="font-serif text-lg font-bold">Shop</h5>
-              <ul className="space-y-4 text-gray-400 text-sm">
-                <li><Link href="/create" className="hover:text-white transition-colors">Kunst erschaffen</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Gutscheine</Link></li>
-              </ul>
-            </div>
-
-            <div className="space-y-6">
-              <h5 className="font-serif text-lg font-bold">Support</h5>
-              <ul className="space-y-4 text-gray-400 text-sm">
-                <li><Link href="#" className="hover:text-white transition-colors">Versandinfo</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Rückgabe</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Kontakt</Link></li>
-              </ul>
-            </div>
-
-            <div className="space-y-6">
-              <h5 className="font-serif text-lg font-bold">Legal</h5>
-              <ul className="space-y-4 text-gray-400 text-sm">
-                <li><Link href="#" className="hover:text-white transition-colors">AGB</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Datenschutz</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Impressum</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-gray-500 text-[10px] uppercase tracking-widest">&copy; 2026 The Gallery Of Us. Art & Print Excellence.</p>
-            <div className="flex gap-6 grayscale opacity-30">
-              <span className="text-[10px] font-bold tracking-tighter">STRIPE</span>
-              <span className="text-[10px] font-bold tracking-tighter">GELATO</span>
-              <span className="text-[10px] font-bold tracking-tighter">VISA</span>
-              <span className="text-[10px] font-bold tracking-tighter">PAYPAL</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
     </main>
   );
