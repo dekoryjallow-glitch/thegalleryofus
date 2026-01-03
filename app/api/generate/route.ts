@@ -5,20 +5,14 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
-  // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:7', message: 'POST /api/generate started', data: { hasRequest: !!req, url: req.url }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
-  // #endregion
+  console.log("[API Generate] POST request started");
   try {
     // Prüfe ob Request Body lesbar ist
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:9', message: 'Parsing FormData', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
-    // #endregion
+    console.log("[API Generate] Parsing FormData...");
     const formData = await req.formData();
     const file1 = formData.get("selfie1") as File;
     const file2 = formData.get("selfie2") as File;
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:10', message: 'FormData parsed', data: { hasFile1: !!file1, hasFile2: !!file2, file1Name: file1?.name, file2Name: file2?.name, file1Size: file1?.size, file2Size: file2?.size }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
-    // #endregion
+    console.log("[API Generate] FormData parsed");
 
     if (!file1 || !file2) {
       return NextResponse.json({ error: "Missing files" }, { status: 400 });
@@ -29,13 +23,8 @@ export async function POST(req: Request) {
     // Supabase Admin Client für Uploads (nutzt Service Role Key für Bypass von RLS Policies)
     let supabase;
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:20', message: 'Creating Supabase admin client', data: { hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL, hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'B' }) }).catch(() => { });
-      // #endregion
+      console.log("[API Generate] Creating Supabase admin client...");
       supabase = createAdminClient();
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:23', message: 'Supabase admin client created', data: {}, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'B' }) }).catch(() => { });
-      // #endregion
       console.log("[API Generate] Supabase admin client created");
     } catch (supabaseError: any) {
       // #region agent log
@@ -46,10 +35,12 @@ export async function POST(req: Request) {
     }
 
     // Prüfe ob Replicate API Token vorhanden ist
-    if (!process.env.REPLICATE_API_TOKEN) {
+    const replicateToken = process.env.REPLICATE_API_TOKEN;
+    if (!replicateToken) {
       console.error("[API Generate] REPLICATE_API_TOKEN is not set!");
       throw new Error("REPLICATE_API_TOKEN environment variable is not set");
     }
+    console.log("[API Generate] REPLICATE_API_TOKEN is set (length:", replicateToken.length, ")");
 
     const replicate = new Replicate({
       auth: process.env.REPLICATE_API_TOKEN,
@@ -79,18 +70,12 @@ export async function POST(req: Request) {
 
     let url1, url2;
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:61', message: 'Starting image uploads', data: { timestamp }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'D' }) }).catch(() => { });
-      // #endregion
+      console.log("[API Generate] Starting image uploads...");
       url1 = await uploadFile(file1, `uploads/${timestamp}_1.jpg`);
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:63', message: 'First image uploaded', data: { url1: url1?.substring(0, 100) }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'D' }) }).catch(() => { });
-      // #endregion
+      console.log("[API Generate] First image uploaded");
       url2 = await uploadFile(file2, `uploads/${timestamp}_2.jpg`);
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:65', message: 'Both images uploaded successfully', data: { url1: url1?.substring(0, 100), url2: url2?.substring(0, 100) }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'D' }) }).catch(() => { });
-      // #endregion
-      console.log("[API Generate] Both images uploaded successfully:", { url1, url2 });
+      console.log("[API Generate] Both images uploaded successfully");
+      console.log("[API Generate] Public URLs:", { url1, url2 });
     } catch (uploadError: any) {
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:67', message: 'Image upload failed', data: { error: uploadError?.message, stack: uploadError?.stack }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'D' }) }).catch(() => { });
@@ -138,42 +123,32 @@ TASK: Create a clean digital 'Split-Face' Continuous Line Drawing merging the tw
 
     let prediction;
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:101', message: 'Calling Replicate API', data: { model: 'google/nano-banana-pro', imageInputCount: replicateInput.image_input.length, promptLength: replicateInput.prompt.length, hasReplicateToken: !!process.env.REPLICATE_API_TOKEN }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
-      // #endregion
       console.log("[API Generate] Calling Replicate API with model: google/nano-banana-pro");
-      console.log("[API Generate] Replicate input:", { image_input_count: replicateInput.image_input.length, prompt_length: replicateInput.prompt.length });
+      console.log("[API Generate] Replicate input payload:", JSON.stringify(replicateInput, null, 2));
+
       prediction = await replicate.predictions.create({
         model: "google/nano-banana-pro",
         input: replicateInput,
       });
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:109', message: 'Replicate prediction created', data: { predictionId: prediction?.id, status: prediction?.status }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
-      // #endregion
+
       console.log("[API Generate] Replicate prediction created successfully:", { id: prediction.id, status: prediction.status });
     } catch (replicateError: any) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:111', message: 'Replicate API error', data: { error: replicateError?.message, status: replicateError?.status, statusCode: replicateError?.statusCode }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
-      // #endregion
-      console.error("[API Generate] Replicate API error:", replicateError);
+      console.error("[API Generate] Replicate API error details:", {
+        message: replicateError.message,
+        status: replicateError.status,
+        statusCode: replicateError.statusCode,
+        stack: replicateError.stack
+      });
       throw new Error(`Replicate API error: ${replicateError.message || replicateError.toString()}`);
     }
 
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:115', message: 'Returning success response', data: { generationId: 'nano-banana-pro-image-input', replicateId: prediction.id }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
-    // #endregion
     return NextResponse.json({
       generationId: "nano-banana-pro-image-input",
       replicateId: prediction.id
     });
 
   } catch (error: any) {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c4b693a6-e4ee-4d58-9f0a-6cb5db0f1fcc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'app/api/generate/route.ts:120', message: 'Error caught in POST handler', data: { error: error?.message, errorName: error?.name, stack: error?.stack }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A,B,C,D' }) }).catch(() => { });
-    // #endregion
-    console.error("[API Generate] ERROR:", error);
-    console.error("[API Generate] Error stack:", error.stack);
-    console.error("[API Generate] Error name:", error.name);
+    console.error("[API Generate] FINAL ERROR:", error);
     return NextResponse.json({
       error: error.message || "Internal server error",
       errorName: error.name,
