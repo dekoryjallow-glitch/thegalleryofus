@@ -92,33 +92,112 @@ export async function POST(req: Request) {
       image_input: [url1, url2],
       width: 1024,
       height: 1024,
-      prompt: `You are a minimalist stencil artist in the style of Banksy.
+      prompt: `STYLE REFERENCE: 
+Banksy street art stencil graffiti with heavy spray paint texture and soft edges.
 
-TASK: Create a clean digital 'Split-Face' Continuous Line Drawing merging the two people from the input images into ONE single face shape.
+SUBJECT & COMPOSITION:
+Create a minimalist black-and-white stencil portrait of TWO FACES positioned intimately close together:
+- Person 1 (left side, from first input image): Face in profile or three-quarter view, angled toward the right
+- Person 2 (right side, from second input image): Face in profile or three-quarter view, angled toward the left
+- The two faces are LEANING TOWARD EACH OTHER with FOREHEADS GENTLY TOUCHING
+- Their NOSES DO NOT TOUCH – keep visible gap
+- Their LIPS DO NOT TOUCH – maintain clear separation (intimate but not kissing)
+- The heads create a unified, balanced composition suggesting connection and intimacy
 
-1. COMPOSITION - "THE SPLIT":
-- ASPECT RATIO: 1:1 Square (1024x1024). 
-- OUTPUT: A flat, 2D digital art file on a PURE WHITE BACKGROUND (#FFFFFF).
-- Do NOT draw two separate heads. Draw ONE centered face.
-- The LEFT half of this face must be the features of Person 1 (from first image).
-- The RIGHT half of this face must be the features of Person 2 (from second image).
-- Merge them vertically down the middle using a loose, abstract continuous line.
-- ZOOM & MARGINS: Ensure there is enough white space/margin around the face. Close-up on the face only. No necks, no shoulders, no bodies. Just the facial features floating in white space.
+SPATIAL LAYOUT:
+- Aspect Ratio: 1:1 square (1024x1024)
+- Light beige/cream background (#F5F5DC or #E8E4D8) – CLEAN and MINIMAL
+- Both faces positioned HEAD-TO-HEAD in the center of the canvas
+- Close-up framing: Focus on faces only (from top of head to upper neck/shoulder suggestion). No full bodies.
+- Balanced white space around the composition (10-15% margin on all sides)
 
-2. STYLE - "BANKSY MINIMALISM":
-- Use only ONE single, fluid black line. Extremely abstract and sparse.
-- Reduce features to the absolute minimum: just the eye shape, a hint of the nose, and the mouth line.
-- TEXTURE: Add slight 'stencil spray' splatter or drip effects near the edges of the line.
+FACIAL EXPRESSION (CRITICAL – Defines the emotional tone):
+- Both faces show SUBTLE, GENTLE CONTENTMENT
+- Lips: SLIGHTLY upturned at the corners – a soft, natural smile (NOT a grin, NOT teeth showing)
+- The smile is BARELY VISIBLE but clearly present – think "inner peace" not "posing for camera"
+- Eyes: Can be closed (meditative) or half-open (relaxed) – avoid wide-open intense stare
+- Overall expression conveys: Safety, belonging, calm happiness, being at peace with each other
+- Facial muscles relaxed – no tension in jaw, forehead, or around eyes
+- The emotion should feel AUTHENTIC and INTIMATE, not performed or exaggerated
 
-3. COLOR ACCENT:
-- The drawing is Black & White.
-- Add EXACTLY ONE bold, graffiti-style splash of color (e.g., a bright red heart or a gold spray streak) right where the two faces merge/kiss in the center.
+FACIAL FEATURES:
 
-4. CRITICAL EXCLUSIONS (DO NOT GENERATE):
-- NO MOCKUPS, NO FRAMES, NO CANVAS TEXTURE.
-- NO WALLS, NO INTERIOR SETTINGS, NO SHADOWS, NO REALISTIC LIGHTING.
-- NO SHADING, NO GREY, NO REALISM.
-- The output must be a clean, digital image file ready for professional printing.`
+LEFT FACE (Person 1):
+- Profile or three-quarter view showing one eye, eyebrow, nose, lips
+- Hair: Flowing, textured strokes with volume (adapt to input image – long, short, curly, straight)
+- Eye: Soft, relaxed expression – can be gently closed or half-lidded
+- Mouth: Subtle smile – corners slightly lifted, natural and peaceful
+- Soft facial features: delicate jawline, relaxed natural expression
+- Overall mood: Content, at ease, gently happy
+
+RIGHT FACE (Person 2):
+- Profile or three-quarter view mirroring the left face's angle
+- Hair: Textured strokes adapting to input image
+- Facial hair (if applicable): Bold black spray-filled areas for beard/mustache
+- Eye: Soft, relaxed expression matching Person 1
+- Mouth: Subtle smile – corners slightly lifted, mirroring the gentle contentment
+- Facial features adapted to input image
+- Overall mood: Peaceful, grounded, quietly joyful
+
+LINE & TEXTURE (CRITICAL – Defines the Banksy look):
+- Black spray-painted outlines with HEAVY STENCIL TEXTURE
+- Edges are NOT sharp – they have SOFT OVERSPRAY/BLEEDING like real spray paint through a stencil
+- Lines are NOT continuous – they break, fade, and have organic gaps
+- Vary spray intensity: Darker/denser in core areas (eyes, lips, hair shadows), lighter/mistier at edges
+- Add subtle GRADIENT FADE at hair edges and outer contours (spray dissipating into air)
+- The smile should be captured through subtle line curvature – minimal but clear
+
+SPRAY EFFECTS (Essential for authenticity – BUT KEEP BACKGROUND CLEAN):
+- Moderate overspray haze around face edges ONLY (hair, jawline, shoulders) – not scattered across background
+- MINIMAL black dots: 3-5 small dots placed close to the faces, NOT scattered across the entire background
+- Subtle spray mist connecting the two faces (like shared atmosphere) – keep within the face area
+- DRIPS: 2-4 vertical paint drips falling from organic points (hair tips, chin, eyebrows) – keep them subtle and attached to the faces, not random background drips
+- IMPORTANT: Keep the background CLEAN – spray effects should be concentrated around the faces, not filling the entire canvas
+
+BACKGROUND CLEANLINESS (CRITICAL):
+- The beige/cream background should be MOSTLY CLEAN with minimal texture
+- Spray effects (dots, splatter, mist) should be concentrated AROUND THE FACES ONLY
+- Avoid scattered random dots or splatter across the empty background areas
+- The focus should be on the faces with clean negative space surrounding them
+- Think: "Gallery-ready clean canvas with focused spray art subject"
+
+COLOR:
+- Pure black and white only
+- NO color accents (keep the raw streetart authenticity)
+- Background: Light beige/cream (#F5F5DC or #E8E4D8) – CLEAN and MINIMAL
+
+POSITIONING DETAILS:
+- The two faces feel naturally positioned, as if captured mid-moment
+- FOREHEADS touch gently – this is the primary connection point
+- NOSES do not touch – maintain visible gap
+- LIPS clearly separated – creates anticipation without kissing
+- Their angles create visual tension and intimacy
+- Hair from both sides can slightly overlap or flow toward each other
+
+MOOD & ATMOSPHERE:
+- Intimate and romantic through proximity and composition
+- EMOTIONAL CORE: Quiet happiness, contentment, feeling safe and at home with each other
+- Urban streetart aesthetic with deep emotional authenticity
+- Clean, gallery-worthy presentation
+- The composition feels balanced, meditative, peaceful, and gently joyful
+- This is the feeling of "being together is enough" – no performance, just presence
+
+CRITICAL EXCLUSIONS:
+- NO KISSING – lips must not touch, noses must not touch
+- ONLY FOREHEADS touch
+- NO wide smiles or grins – keep it subtle and natural
+- NO teeth showing – lips stay together with gentle upward curve
+- NO exaggerated expressions – everything stays soft and authentic
+- NO vertical split down the middle (these are two separate positioned heads, not a split-face)
+- NO mockups, frames, canvas textures, or wall backgrounds
+- NO realistic shading or gradients (only spray paint density variations)
+- NO grey tones except as spray overspray effect (base is pure black + beige background)
+- NO full bodies, torsos, or clothing details
+- NO color accents
+- NO excessive background splatter – keep background CLEAN with spray effects concentrated around faces only
+
+OUTPUT:
+Clean, flat digital file ready for professional print (PNG, 1024x1024, clean beige background with minimal texture)`
     };
 
     let prediction;
