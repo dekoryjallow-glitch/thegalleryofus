@@ -6,6 +6,7 @@ import { CookieBanner } from "@/components/cookie/CookieBanner";
 import { CookieSettingsModal } from "@/components/cookie/CookieSettingsModal";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { GoogleTagManager } from "@/components/analytics/GoogleTagManager";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,16 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased text-gray-900 bg-cream-50`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-W4Z6P3MJ"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         <CookieConsentProvider>
           {children}
           <CookieBanner />

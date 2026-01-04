@@ -54,14 +54,9 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
         saveConsent({ essential: true, analytics: false, marketing: false });
     };
 
-    // Safe wrapper for setting consent manually (e.g. from settings modal)
     const setConsent = (newConsent: CookieConsent) => {
         saveConsent(newConsent);
     };
-
-    if (!isMounted) {
-        return null; // or simplified loading state
-    }
 
     return (
         <CookieConsentContext.Provider
