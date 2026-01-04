@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/Button";
+import { Lock, Camera, RefreshCw, UploadCloud } from "lucide-react";
 
 import { Logo } from "@/components/Logo";
 import { UserMenu } from "@/components/UserMenu";
@@ -138,68 +139,98 @@ export default function CreatePage() {
         </Link>
         <div className="flex items-center gap-6">
           <UserMenu />
-          <Link href="/" className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase hover:text-terracotta-500 transition-colors">
-            Abbrechen
-          </Link>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-12 md:py-20">
+      <main className="max-w-4xl mx-auto px-6 py-8 md:py-16">
+
+        {/* Header Section - Emotional & Clear */}
         <div className="text-center space-y-4 mb-16 animate-fade-in">
-          <h1 className="font-serif text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
-            Euer Unikat beginnt hier
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            Erschaffe euer Unikat
           </h1>
           <p className="text-gray-500 font-light text-lg md:text-xl max-w-xl mx-auto">
-            Lade zwei Porträts hoch, um eure Geschichte in einer einzigen Linie zu verewigen.
+            Zwei Fotos. Ein Kunstwerk. In wenigen Sekunden bereit.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-16">
-          <UploadSlot
-            label="Partner 1"
-            file={file1}
-            preview={preview1}
-            onChange={(f: File) => handleFile(f, 1)}
-          />
-          <UploadSlot
-            label="Partner 2"
-            file={file2}
-            preview={preview2}
-            onChange={(f: File) => handleFile(f, 2)}
-          />
+        {/* Upload Grid - Structured Guidance */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-12">
+
+          <div className="space-y-3">
+            <UploadSlot
+              number={1}
+              label="Partner 1"
+              file={file1}
+              preview={preview1}
+              onChange={(f: File) => handleFile(f, 1)}
+            />
+            <p className="text-center text-xs text-gray-400 font-medium">
+              Ein einfaches Selfie reicht völlig aus.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <UploadSlot
+              number={2}
+              label="Partner 2"
+              file={file2}
+              preview={preview2}
+              onChange={(f: File) => handleFile(f, 2)}
+            />
+            <p className="text-center text-xs text-gray-400 font-medium">
+              Hintergrund & Licht sind egal.
+            </p>
+          </div>
+
         </div>
 
-        <div className="flex flex-col items-center gap-8">
+        {/* CTA Section - Trust & Action */}
+        <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
+
+          {/* Trust Signal */}
+          <div className="flex items-center gap-2 text-gray-400">
+            <Lock className="w-3 h-3" />
+            <span className="text-[10px] font-bold uppercase tracking-widest">
+              Fotos werden privat verarbeitet
+            </span>
+          </div>
+
           <Button
             onClick={handleGenerate}
             disabled={!file1 || !file2 || isLoading}
-            className="bg-terracotta-500 hover:bg-terracotta-600 text-white !px-16 !py-5 rounded-full text-xl shadow-2xl shadow-terracotta-500/20 disabled:bg-cream-200 disabled:text-gray-400 transition-all active:scale-95 flex items-center gap-3"
+            className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white h-auto py-4 px-8 rounded-full shadow-2xl shadow-terracotta-500/20 disabled:bg-cream-200 disabled:text-gray-400 disabled:shadow-none transition-all active:scale-95 group relative overflow-hidden"
           >
-            {isLoading ? "Verbindung wird aufgebaut..." : "Meisterwerk erschaffen"}
+            <div className="flex flex-col items-center">
+              <span className="text-lg font-bold">
+                {isLoading ? "Verbindung wird aufgebaut..." : "Meisterwerk erschaffen"}
+              </span>
+              {!isLoading && (
+                <span className="text-[10px] opacity-80 font-normal mt-0.5">
+                  Dauer: ca. 60 Sekunden
+                </span>
+              )}
+            </div>
             {!isLoading && (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0 duration-300">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              </div>
             )}
           </Button>
 
-          <div className="flex items-center gap-4 py-4 px-6 bg-white/50 rounded-full border border-cream-200">
-            <div className="flex -space-x-2">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-200 overflow-hidden">
-                  <div className="w-full h-full bg-terracotta-100" />
-                </div>
-              ))}
-            </div>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-[0.1em]">Über 12k Kunstwerke generiert</p>
-          </div>
         </div>
       </main>
 
-      {/* Mobile Sticky CTA for better UX on small screens */}
+      {/* Mobile Sticky CTA */}
       {(!file1 || !file2) && (
-        <div className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-full px-6 z-30 transition-all duration-500 animate-bounce">
-          <div className="bg-white p-4 rounded-2xl shadow-2xl border border-cream-200 text-center">
-            <p className="text-[10px] text-terracotta-500 font-bold uppercase tracking-widest mb-1">Upload erforderlich</p>
-            <p className="text-xs text-gray-400">Bitte wähle zwei Fotos aus.</p>
+        <div className="md:hidden fixed bottom-6 left-6 right-6 z-30 animate-fade-in-up">
+          <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-cream-200 text-center">
+            <p className="text-xs font-bold text-gray-900 mb-1">
+              Schritt {file1 ? '2' : '1'} von 2
+            </p>
+            <p className="text-[10px] text-gray-500 font-medium">
+              {!file1 ? 'Wähle das erste Foto aus.' : 'Wähle das zweite Foto aus.'}
+            </p>
           </div>
         </div>
       )}
@@ -210,21 +241,22 @@ export default function CreatePage() {
 }
 
 interface UploadSlotProps {
+  number: number;
   label: string;
   file: File | null;
   preview: string | null;
   onChange: (file: File) => void;
 }
 
-function UploadSlot({ label, file, preview, onChange }: UploadSlotProps) {
+function UploadSlot({ number, label, file, preview, onChange }: UploadSlotProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div
       onClick={() => inputRef.current?.click()}
-      className={`group relative overflow-hidden rounded-2xl aspect-[3/4] transition-all duration-500 cursor-pointer border-2 ${preview
-        ? 'border-terracotta-500/30'
-        : 'border-dashed border-cream-200 bg-white hover:bg-cream-50 hover:border-terracotta-400/50'
+      className={`group relative w-full aspect-[4/5] rounded-[2rem] transition-all duration-300 cursor-pointer overflow-hidden ${preview
+          ? 'ring-4 ring-terracotta-500/10 shadow-lg'
+          : 'bg-white border-2 border-dashed border-cream-200 hover:border-terracotta-300 hover:bg-cream-50'
         }`}
     >
       <input
@@ -237,38 +269,43 @@ function UploadSlot({ label, file, preview, onChange }: UploadSlotProps) {
         }}
       />
 
+      {/* Step Badge */}
+      <div className={`absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm transition-colors ${preview ? 'bg-white text-terracotta-500' : 'bg-cream-100 text-gray-400 group-hover:bg-terracotta-100 group-hover:text-terracotta-600'
+        }`}>
+        {number}
+      </div>
+
       {preview ? (
         <>
-          <Image src={preview} alt="Upload Preview" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
-            <span className="opacity-0 group-hover:opacity-100 bg-white text-black px-4 py-2 rounded-full text-xs font-bold uppercase transition-all transform translate-y-4 group-hover:translate-y-0">
-              Bild ändern
-            </span>
+          <Image
+            src={preview}
+            alt="Upload Preview"
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          {/* Overlay confirming success & allowing change */}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white">
+            <RefreshCw className="w-8 h-8 mb-2 drop-shadow-md" />
+            <span className="font-bold text-sm tracking-wide">Foto wechseln</span>
+          </div>
+          <div className="absolute bottom-4 right-4 bg-terracotta-500 text-white p-2 rounded-full shadow-lg md:hidden">
+            <RefreshCw className="w-4 h-4" />
           </div>
         </>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-4 transition-transform group-hover:scale-105">
-          <div className="w-12 h-12 rounded-full bg-cream-50 flex items-center justify-center text-terracotta-500 group-hover:bg-terracotta-500 group-hover:text-white transition-all">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-cream-100 mb-4 flex items-center justify-center text-terracotta-400 group-hover:scale-110 group-hover:bg-terracotta-100 group-hover:text-terracotta-600 transition-all duration-300">
+            <Camera className="w-8 h-8" />
           </div>
-          <div className="space-y-1">
-            <p className="font-serif text-xl font-bold">{label}</p>
-            <p className="text-gray-400 text-xs">Foto hochladen</p>
-          </div>
+          <h3 className="font-serif text-xl font-bold text-gray-900 mb-1">
+            {label}
+          </h3>
+          <span className="text-xs font-bold text-terracotta-500 uppercase tracking-widest opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+            Foto wählen
+          </span>
         </div>
       )}
-
-      {/* Label Badge */}
-      <div className="absolute top-4 left-4 z-10">
-        <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${preview ? 'bg-terracotta-500 text-white shadow-lg' : 'bg-cream-100 text-gray-500'
-          }`}>
-          {preview ? 'Bereit' : slotLabel(label)}
-        </span>
-      </div>
     </div>
   );
 }
 
-function slotLabel(label: string) {
-  return label === "Partner 1" ? "Eins" : "Zwei";
-}

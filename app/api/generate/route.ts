@@ -1,12 +1,70 @@
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   console.log("[API Generate] POST request started");
   try {
+    // 1. Auth & Limit Check
+    const supabaseUserClient = await createClient();
+    const { data: { user }, error: authError } = await supabaseUserClient.auth.getUser();
+
+    if (authError || !user) {
+      console.log("[API Generate] Unauthorized request");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check limits
+    // Note: requires 'daily_generation_count' and 'last_generation_date' in 'profiles'
+    const { data: profile, error: profileError } = await supabaseUserClient
+      .from('profiles')
+      .select('daily_generation_count, last_generation_date')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError) {
+      console.error("[API Generate] Error fetching profile:", profileError);
+      // Fail safe: allow if profile fetch fails? Or block? 
+      // Safe -> Block to prevent free usage if DB is broken, or strictly enforce.
+      // Let's throw for now to be safe.
+      throw new Error("Fehler beim Prüfen des Tageslimits (Datenbank). Bitte Datenbank-Update prüfen.");
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const lastDate = profile.last_generation_date;
+    const currentCount = profile.daily_generation_count || 0;
+
+    let newCount = 1;
+    if (lastDate === today) {
+      if (currentCount >= 3) {
+        console.log(`[API Generate] Limit reached for user ${user.id} (${currentCount}/3)`);
+        return NextResponse.json({
+          error: "Tageslimit erreicht. Du kannst morgen wieder neue Kunstwerke erstellen."
+        }, { status: 429 });
+      }
+      newCount = currentCount + 1;
+    }
+
+    // Update limit immediately (optimistic reservation)
+    const { error: updateError } = await supabaseUserClient
+      .from('profiles')
+      .update({
+        daily_generation_count: newCount,
+        last_generation_date: today
+      })
+      .eq('id', user.id);
+
+    if (updateError) {
+      console.error("[API Generate] Error updating profile limit:", updateError);
+      throw new Error("Failed to update generation limit.");
+    }
+
+    console.log(`[API Generate] Limit updated. User: ${user.id}, New Count: ${newCount}/3`);
+
+
     // Prüfe ob Request Body lesbar ist
     console.log("[API Generate] Parsing FormData...");
     const formData = await req.formData();

@@ -114,15 +114,7 @@ function PreviewContent() {
               </div>
             </div>
 
-            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="shrink-0 w-24 h-24 bg-white border border-cream-200 rounded-lg overflow-hidden cursor-pointer hover:border-terracotta-500 transition-colors shadow-sm">
-                  <div className="w-full h-full bg-cream-100 flex items-center justify-center text-[10px] text-gray-400 font-bold uppercase tracking-tighter text-center px-1">
-                    {i === 1 ? 'Nahaufnahme' : i === 2 ? 'Im Raum' : 'Textur'}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Thumbnails removed for focus */}
           </div>
 
           {/* PRODUCT INFOS */}
@@ -183,10 +175,16 @@ function PreviewContent() {
                 ) : (
                   <>
                     <ShoppingBag className="w-5 h-5" />
-                    <span>In den Warenkorb</span>
+                    <span>Jetzt bestellen</span>
                   </>
                 )}
               </Button>
+
+              <div className="text-center">
+                <Link href="/create" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-terracotta-600 transition-colors py-2">
+                  <span>Neu generieren</span>
+                </Link>
+              </div>
 
               <ShippingAddressModal
                 isOpen={isModalOpen}
