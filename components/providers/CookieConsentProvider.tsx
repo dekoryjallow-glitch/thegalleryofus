@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type CookieConsent = {
+export type CookieConsent = {
     essential: boolean;
     analytics: boolean;
     marketing: boolean;

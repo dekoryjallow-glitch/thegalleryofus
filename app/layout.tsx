@@ -4,8 +4,7 @@ import "./globals.css";
 import { CookieConsentProvider } from "@/components/providers/CookieConsentProvider";
 import { CookieBanner } from "@/components/cookie/CookieBanner";
 import { CookieSettingsModal } from "@/components/cookie/CookieSettingsModal";
-import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
-import { GoogleTagManager } from "@/components/analytics/GoogleTagManager";
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import Script from "next/script";
 
 const inter = Inter({
@@ -47,8 +46,7 @@ export default function RootLayout({
           {children}
           <CookieBanner />
           <CookieSettingsModal />
-          <GoogleAnalytics />
-          <GoogleTagManager />
+          <AnalyticsProvider />
         </CookieConsentProvider>
       </body>
     </html>

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export function GoogleAnalytics() {
     const { consent } = useCookieConsent();
-    const GA_ID = 'G-HZHXYJTPBQ';
+    const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-HZHXYJTPBQ';
 
     useEffect(() => {
         if (consent) {
