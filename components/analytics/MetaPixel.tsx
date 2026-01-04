@@ -19,12 +19,15 @@ export function MetaPixel() {
     // TODO: Founder to replace this with real ID
     const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "";
 
-    if (!PIXEL_ID) {
-        console.warn("[Analytics Debug] Meta Pixel ID missing");
-        return null;
-    }
+    // Moves check inside effect or renders null at logic end, 
+    // BUT we need the Hook to run unconditionally.
 
     useEffect(() => {
+        if (!PIXEL_ID) {
+            console.warn("[Analytics Debug] Meta Pixel ID missing");
+            return;
+        }
+
         if (!loaded) return;
 
         if (consent?.marketing) {
@@ -33,7 +36,7 @@ export function MetaPixel() {
         } else {
             window.fbq("consent", "revoke");
         }
-    }, [consent, loaded]);
+    }, [consent, loaded, PIXEL_ID]);
 
     if (!PIXEL_ID) return null;
 

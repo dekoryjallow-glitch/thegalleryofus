@@ -10,9 +10,16 @@ export function Mixpanel() {
     // TODO: Founder to replace this with real Token
     const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || "";
 
-    if (!MIXPANEL_TOKEN) {
-        console.warn("[Analytics Debug] Mixpanel Token missing");
-    }
+    // Logging side-effect must be inside useEffect or just plain console log (if strictly needed)
+    // But since this is a component, let's keep it clean and just log if missing during render is fine, 
+    // BUT hooks must be below.
+
+    // Better: Just log once in effect
+    useEffect(() => {
+        if (!MIXPANEL_TOKEN) {
+            console.warn("[Analytics Debug] Mixpanel Token missing");
+        }
+    }, [MIXPANEL_TOKEN]);
 
     useEffect(() => {
         if (!MIXPANEL_TOKEN) return;
