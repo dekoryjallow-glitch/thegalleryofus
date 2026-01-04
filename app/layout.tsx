@@ -5,6 +5,7 @@ import { CookieConsentProvider } from "@/components/providers/CookieConsentProvi
 import { CookieBanner } from "@/components/cookie/CookieBanner";
 import { CookieSettingsModal } from "@/components/cookie/CookieSettingsModal";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
           <CookieBanner />
           <CookieSettingsModal />
           <GoogleAnalytics />
+          <SpeedInsights />
         </CookieConsentProvider>
       </body>
     </html>
