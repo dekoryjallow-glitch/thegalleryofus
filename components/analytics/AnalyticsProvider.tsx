@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useCookieConsent } from "@/components/providers/CookieConsentProvider";
 import { GoogleAnalytics } from "./GoogleAnalytics";
 import { GoogleTagManager } from "./GoogleTagManager";
@@ -9,7 +9,7 @@ import { MetaPixel } from "./MetaPixel";
 import { Mixpanel } from "./Mixpanel";
 import { trackEvent } from "@/lib/analytics";
 
-export function AnalyticsProvider() {
+function AnalyticsLogic() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const { consent } = useCookieConsent();
@@ -43,20 +43,23 @@ export function AnalyticsProvider() {
             }
 
             // 3. Mixpanel
-            // Note: Mixpanel tracks automatically if implemented, but we set track_pageview: false 
-            // in init to have control. So we track it here.
-            // trackEvent checks for opt-in status internally.
             trackEvent("page_view", { path: url });
-
         }
     }, [pathname, searchParams, consent]);
 
+    return null;
+}
+
+export function AnalyticsProvider() {
     return (
         <>
             <GoogleTagManager />
             <GoogleAnalytics />
             <MetaPixel />
             <Mixpanel />
+            <Suspense fallback={null}>
+                <AnalyticsLogic />
+            </Suspense>
         </>
     );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { Suspense } from "react";
+import "./globals.css";
 import { CookieConsentProvider } from "@/components/providers/CookieConsentProvider";
 import { CookieBanner } from "@/components/cookie/CookieBanner";
 import { CookieSettingsModal } from "@/components/cookie/CookieSettingsModal";
@@ -48,9 +48,7 @@ export default function RootLayout({
           <CookieBanner />
           <CookieSettingsModal />
 
-          <Suspense fallback={null}>
-            <AnalyticsProvider />
-          </Suspense>
+          <AnalyticsProvider />
         </CookieConsentProvider>
       </body>
     </html>
