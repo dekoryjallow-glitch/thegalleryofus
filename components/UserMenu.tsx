@@ -22,6 +22,14 @@ export function UserMenu({ initialUser = null }: { initialUser?: any }) {
             setUser(user);
 
             if (user) {
+                const ADMIN_EMAIL = 'dekory@onvisimedia.com';
+                const isAdmin = user.email === ADMIN_EMAIL;
+
+                if (isAdmin) {
+                    setCredits(Infinity);
+                    return;
+                }
+
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('daily_generation_count, last_generation_date')
@@ -85,17 +93,19 @@ export function UserMenu({ initialUser = null }: { initialUser?: any }) {
                             <div className="mt-3 pt-3 border-t border-gray-100/50">
                                 <div className="flex justify-between items-center mb-1">
                                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tagesguthaben</p>
-                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${credits > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                                        {credits} / 3
+                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${credits === Infinity ? 'bg-purple-50 text-purple-600' : credits > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                        {credits === Infinity ? 'Unlimited' : `${credits} / 3`}
                                     </span>
                                 </div>
                                 <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
                                     <div
-                                        className={`h-full transition-all duration-500 ${credits === 0 ? 'bg-red-400' : 'bg-terracotta-400'}`}
-                                        style={{ width: `${(credits / 3) * 100}%` }}
+                                        className={`h-full transition-all duration-500 ${credits === Infinity ? 'bg-purple-400 w-full' : credits === 0 ? 'bg-red-400' : 'bg-terracotta-400'}`}
+                                        style={{ width: credits === Infinity ? '100%' : `${(credits / 3) * 100}%` }}
                                     />
                                 </div>
-                                <p className="text-[9px] text-gray-400 mt-1 italic">Täglich 3 Generierungen geschenkt</p>
+                                <p className="text-[9px] text-gray-400 mt-1 italic">
+                                    {credits === Infinity ? 'Admin-Zugang aktiviert' : 'Täglich 3 Generierungen geschenkt'}
+                                </p>
                             </div>
                         )}
                     </div>

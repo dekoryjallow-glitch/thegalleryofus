@@ -19,52 +19,58 @@ export async function POST(req: Request) {
       }, { status: 401 });
     }
 
-    // Check limits
-    // Note: requires 'daily_generation_count' and 'last_generation_date' in 'profiles'
-    const { data: profile, error: profileError } = await supabaseUserClient
-      .from('profiles')
-      .select('daily_generation_count, last_generation_date')
-      .eq('id', user.id)
-      .single();
+    const ADMIN_EMAIL = 'dekory@onvisimedia.com';
+    const isAdmin = user.email === ADMIN_EMAIL;
 
-    if (profileError) {
-      console.error("[API Generate] Error fetching profile:", profileError);
-      // Fail safe: allow if profile fetch fails? Or block? 
-      // Safe -> Block to prevent free usage if DB is broken, or strictly enforce.
-      // Let's throw for now to be safe.
-      throw new Error("Fehler beim Prüfen des Tageslimits (Datenbank). Bitte Datenbank-Update prüfen.");
-    }
-
-    const today = new Date().toISOString().split('T')[0];
-    const lastDate = profile.last_generation_date;
-    const currentCount = profile.daily_generation_count || 0;
-
+    // Check limits (skip for admin)
+    let profile: any = null;
     let newCount = 1;
-    if (lastDate === today) {
-      if (currentCount >= 3) {
-        console.log(`[API Generate] Limit reached for user ${user.id} (${currentCount}/3)`);
-        return NextResponse.json({
-          error: "Tageslimit erreicht. Du kannst morgen wieder neue Kunstwerke erstellen."
-        }, { status: 429 });
+    const today = new Date().toISOString().split('T')[0];
+
+    if (!isAdmin) {
+      const { data: profileData, error: profileError } = await supabaseUserClient
+        .from('profiles')
+        .select('daily_generation_count, last_generation_date')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error("[API Generate] Error fetching profile:", profileError);
+        throw new Error("Fehler beim Prüfen des Tageslimits (Datenbank). Bitte Datenbank-Update prüfen.");
       }
-      newCount = currentCount + 1;
+      profile = profileData;
+
+      const lastDate = profile.last_generation_date;
+      const currentCount = profile.daily_generation_count || 0;
+
+      if (lastDate === today) {
+        if (currentCount >= 3) {
+          console.log(`[API Generate] Limit reached for user ${user.id} (${currentCount}/3)`);
+          return NextResponse.json({
+            error: "Tageslimit erreicht. Du kannst morgen wieder neue Kunstwerke erstellen."
+          }, { status: 429 });
+        }
+        newCount = currentCount + 1;
+      }
+
+      // Update limit immediately (optimistic reservation)
+      const { error: updateError } = await supabaseUserClient
+        .from('profiles')
+        .update({
+          daily_generation_count: newCount,
+          last_generation_date: today
+        })
+        .eq('id', user.id);
+
+      if (updateError) {
+        console.error("[API Generate] Error updating profile limit:", updateError);
+        throw new Error("Failed to update generation limit.");
+      }
+
+      console.log(`[API Generate] Limit updated. User: ${user.id}, New Count: ${newCount}/3`);
+    } else {
+      console.log(`[API Generate] Admin detected (${user.email}). Bypassing limit.`);
     }
-
-    // Update limit immediately (optimistic reservation)
-    const { error: updateError } = await supabaseUserClient
-      .from('profiles')
-      .update({
-        daily_generation_count: newCount,
-        last_generation_date: today
-      })
-      .eq('id', user.id);
-
-    if (updateError) {
-      console.error("[API Generate] Error updating profile limit:", updateError);
-      throw new Error("Failed to update generation limit.");
-    }
-
-    console.log(`[API Generate] Limit updated. User: ${user.id}, New Count: ${newCount}/3`);
 
 
     // Prüfe ob Request Body lesbar ist
