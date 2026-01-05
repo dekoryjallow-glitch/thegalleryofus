@@ -14,7 +14,9 @@ export async function POST(req: Request) {
 
     if (authError || !user) {
       console.log("[API Generate] Unauthorized request");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({
+        error: "Bitte melde dich an. Du hast täglich 3 Generierungen gratis."
+      }, { status: 401 });
     }
 
     // Check limits

@@ -32,7 +32,7 @@ export default async function Home() {
 
             <p className="text-lg md:text-xl text-gray-500 max-w-lg mx-auto lg:mx-0 font-light leading-relaxed">
               Wir halten fest, was zwischen zwei Menschen existiert. <span className="text-gray-900 font-medium italic">Echt. Nah. Berührend.</span><br className="hidden md:block" />
-              Ein Unikat, das die Tiefe eures Augenblicks bewahrt.
+              Melde dich an und erhalte täglich 3 Kunstwerke gratis.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
@@ -167,7 +167,7 @@ export default async function Home() {
                 <span className="font-serif text-2xl font-bold">2</span>
               </div>
               <h3 className="font-serif text-2xl font-bold text-gray-900 transition-colors group-hover:text-terracotta-500">Die Verwandlung</h3>
-              <p className="text-gray-500 leading-relaxed">Aus dem Bild wird Gefühl. Wir verdichten eure Aufnahme, bis nur noch die Essenz eurer Verbindung sichtbar bleibt.</p>
+              <p className="text-gray-500 leading-relaxed">Aus dem Bild wird Gefühl. Kostenlos für registrierte Nutzer (3x täglich). Wir verdichten eure Aufnahme bis zur Essenz.</p>
             </div>
 
             {/* Step 3 */}

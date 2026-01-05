@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,18 @@ export default function CreatePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [replicateId, setReplicateId] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    fetchUser();
+  }, []);
 
   const handleFile = (file: File, slot: 1 | 2) => {
     if (!file.type.startsWith("image/")) return;
@@ -152,6 +163,17 @@ export default function CreatePage() {
           <p className="text-gray-500 font-light text-lg md:text-xl max-w-xl mx-auto">
             Zwei Fotos. Ein Kunstwerk. In wenigen Sekunden bereit.
           </p>
+          {!user && (
+            <div className="mt-6 p-4 bg-terracotta-50 border border-terracotta-100 rounded-2xl max-w-lg mx-auto animate-fade-in">
+              <p className="text-terracotta-600 font-bold text-sm">
+                Bitte melde dich an, um dein Unikat zu erstellen.<br />
+                Du hast täglich <span className="underline decoration-2 underline-offset-4">3 Generierungen gratis</span>.
+              </p>
+              <Link href="/login" className="inline-block mt-3 text-xs font-bold uppercase tracking-widest text-terracotta-700 hover:text-terracotta-800 transition-colors">
+                Jetzt anmelden →
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Upload Grid - Structured Guidance */}
@@ -255,8 +277,8 @@ function UploadSlot({ number, label, file, preview, onChange }: UploadSlotProps)
     <div
       onClick={() => inputRef.current?.click()}
       className={`group relative w-full aspect-[4/5] rounded-[2rem] transition-all duration-300 cursor-pointer overflow-hidden ${preview
-          ? 'ring-4 ring-terracotta-500/10 shadow-lg'
-          : 'bg-white border-2 border-dashed border-cream-200 hover:border-terracotta-300 hover:bg-cream-50'
+        ? 'ring-4 ring-terracotta-500/10 shadow-lg'
+        : 'bg-white border-2 border-dashed border-cream-200 hover:border-terracotta-300 hover:bg-cream-50'
         }`}
     >
       <input

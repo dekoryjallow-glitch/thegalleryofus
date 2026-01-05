@@ -13,10 +13,32 @@ export function UserMenu({ initialUser = null }: { initialUser?: any }) {
     const [supabase] = useState(() => createClient());
     const router = useRouter();
 
+    const [credits, setCredits] = useState<number | null>(null);
+    const [lastDate, setLastDate] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
+
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('daily_generation_count, last_generation_date')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile) {
+                    const today = new Date().toISOString().split('T')[0];
+                    if (profile.last_generation_date === today) {
+                        setCredits(Math.max(0, 3 - (profile.daily_generation_count || 0)));
+                    } else {
+                        setCredits(3);
+                    }
+                } else {
+                    setCredits(3);
+                }
+            }
         };
 
         // Fetch to keep it fresh
@@ -58,6 +80,24 @@ export function UserMenu({ initialUser = null }: { initialUser?: any }) {
                     <div className="p-4 border-b border-gray-100 bg-gray-50/50">
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Eingeloggt als</p>
                         <p className="text-sm font-semibold truncate text-gray-900">{user.email}</p>
+
+                        {credits !== null && (
+                            <div className="mt-3 pt-3 border-t border-gray-100/50">
+                                <div className="flex justify-between items-center mb-1">
+                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tagesguthaben</p>
+                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${credits > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                        {credits} / 3
+                                    </span>
+                                </div>
+                                <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full transition-all duration-500 ${credits === 0 ? 'bg-red-400' : 'bg-terracotta-400'}`}
+                                        style={{ width: `${(credits / 3) * 100}%` }}
+                                    />
+                                </div>
+                                <p className="text-[9px] text-gray-400 mt-1 italic">Täglich 3 Generierungen geschenkt</p>
+                            </div>
+                        )}
                     </div>
 
                     <div className="p-2">
