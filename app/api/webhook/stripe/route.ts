@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         const supabase = createAdminClient();
 
         // Helper function for order finalization (Best of both worlds: Session & PaymentIntent)
-        const finalizeOrder = async (orderId: string, paymentIntentId: string) => {
+        const finalizeOrder = async (orderId: string, paymentIntentId: string, fallbackEmail?: string) => {
             console.log(`[Stripe Webhook] Finalizing order: ${orderId} (PI: ${paymentIntentId})`);
 
             // 1. Get current order state
@@ -43,9 +43,11 @@ export async function POST(req: Request) {
                 .single();
 
             if (fetchError || !order) {
-                console.error("[Stripe Webhook] ❌ Order not found during finalization:", orderId);
+                console.error("[Stripe Webhook] ❌ Order not found during finalization:", orderId, fetchError);
                 return;
             }
+
+            console.log(`[Stripe Webhook] Current order status: ${order.status}`);
 
             // 2. Only proceed if not already paid
             if (order.status === 'paid') {
@@ -75,7 +77,14 @@ export async function POST(req: Request) {
 
             // 4. Send Confirmation Email
             try {
-                const customerEmail = updatedOrder.shipping_address?.email;
+                // Try several sources for the email
+                const customerEmail = updatedOrder.shipping_address?.email || order.shipping_address?.email || fallbackEmail;
+
+                if (!customerEmail) {
+                    console.error("[Stripe Webhook] ❌ No recipient email found for order:", orderId);
+                    return;
+                }
+
                 console.log("[Stripe Webhook] Sending confirmation email to:", customerEmail);
 
                 const { resend } = await import("@/lib/resend");
@@ -83,15 +92,17 @@ export async function POST(req: Request) {
 
                 const artworkUrl = order.image_url || "https://thegalleryofus.com/logo.png";
 
-                await resend.emails.send({
+                const emailResponse = await resend.emails.send({
                     from: 'The Gallery of Us <shop@thegalleryofus.com>',
-                    to: customerEmail || "",
+                    to: customerEmail,
                     subject: 'Deine Bestellung bei The Gallery of Us',
                     react: OrderConfirmationEmail({
                         orderNumber: `#${order.id.substring(0, 8)}`,
                         imageUrl: artworkUrl,
                     }),
                 });
+
+                console.log("[Stripe Webhook] ✅ Resend response:", emailResponse);
                 console.log("[Stripe Webhook] ✅ Confirmation email sent.");
             } catch (emailError) {
                 console.error("[Stripe Webhook] ❌ Email sending failed:", emailError);
@@ -128,16 +139,20 @@ export async function POST(req: Request) {
                         addressLine2: shippingAddress.line2 || "",
                         city: shippingAddress.city || "",
                         state: shippingAddress.state || "",
-                        zipCode: shippingAddress.postal_code || "",
+                        postal_code: shippingAddress.postal_code || "", // Changed zipCode to postal_code for consistency
                         country: shippingAddress.country || "",
                     };
                 }
 
-                await supabase.from("orders").update(updateData).eq("id", orderId);
+                console.log("[Stripe Webhook] Updating order with shipping data:", orderId);
+                const { error: updateError } = await supabase.from("orders").update(updateData).eq("id", orderId);
+                if (updateError) {
+                    console.error("[Stripe Webhook] ❌ Failed to update order with shipping info:", updateError);
+                }
 
                 // Second: If payment is already successful (standard for cards), finalize now!
                 if (session.payment_status === 'paid' && piId) {
-                    await finalizeOrder(orderId, piId);
+                    await finalizeOrder(orderId, piId, customerEmail || undefined);
                 }
                 break;
             }
@@ -149,11 +164,11 @@ export async function POST(req: Request) {
                 console.log("💰 [Stripe Webhook] PI Succeeded:", pi.id, { orderId });
 
                 if (orderId) {
-                    await finalizeOrder(orderId, pi.id);
+                    await finalizeOrder(orderId, pi.id, pi.receipt_email || undefined);
                 } else {
                     // Fallback lookup if metadata is missing (shouldn't happen with Checkout)
                     const { data: order } = await supabase.from("orders").select("id").eq("stripe_payment_intent_id", pi.id).single();
-                    if (order) await finalizeOrder(order.id, pi.id);
+                    if (order) await finalizeOrder(order.id, pi.id, pi.receipt_email || undefined);
                 }
                 break;
             }

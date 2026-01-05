@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics";
+
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -163,7 +165,16 @@ function PreviewContent() {
               </div>
 
               <Button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  trackEvent("InitiateCheckout", {
+                    value: 74.90,
+                    currency: "EUR",
+                    content_name: "Die Ewige Verbindung",
+                    content_category: "Kunstwerk",
+                    num_items: 1
+                  });
+                  setIsModalOpen(true);
+                }}
                 disabled={isCheckingOut}
                 className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white h-16 rounded-full text-xl shadow-2xl shadow-terracotta-500/20 active:scale-95 transition-all flex items-center justify-center gap-3"
               >

@@ -141,7 +141,10 @@ export async function POST(req: Request) {
             currency: "EUR",
             status: "pending" as any,
             gelato_product_uid: gelatoProductUid, // Store the product UID
-            shipping_address: shippingAddress, // SAVE ADDRESS UPFRONT
+            shipping_address: {
+                ...shippingAddress,
+                email: customerEmail || user.email
+            }, // SAVE ADDRESS UPFRONT WITH EMAIL
         };
 
         console.log("[Checkout API] Attempting to insert order:", { ...insertData, image_url: '...', shipping_address: '...' });
