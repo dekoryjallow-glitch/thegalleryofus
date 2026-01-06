@@ -7,6 +7,7 @@ import { CookieBanner } from "@/components/cookie/CookieBanner";
 import { CookieSettingsModal } from "@/components/cookie/CookieSettingsModal";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
           <CookieSettingsModal />
 
           <AnalyticsProvider />
+          <Analytics />
         </CookieConsentProvider>
       </body>
     </html>
